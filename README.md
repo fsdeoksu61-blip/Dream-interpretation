@@ -1,229 +1,70 @@
-# 🌙 꿈해몽 - Dream Interpretation Website
+# Getting Started with Create React App
 
-AI 기반 꿈 해석 서비스로, OpenAI API를 활용하여 사용자의 꿈을 심리학적 관점에서 해석해주는 웹 애플리케이션입니다.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## ✨ 주요 기능
+## Available Scripts
 
-### 🤖 AI 꿈 해석
-- OpenAI GPT를 활용한 전문적인 꿈 해석
-- 심리학적, 상징적 관점에서의 분석
-- 긍정적이고 건설적인 해석 제공
+In the project directory, you can run:
 
-### 👥 사용자 시스템
-- **비회원 이용**: 회원가입 없이도 서비스 이용 가능
-- **회원 시스템**: 가입 시 모든 기록 영구 보관
-- **이력 연동**: 비회원 이용 기록이 회원가입 시 자동 연동
+### `npm start`
 
-### 📝 꿈 기록 관리
-- 개인 꿈 해석 이력 저장
-- 해석 결과 상세 보기
-- 꿈과 해석 내용 검색
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-### 🌐 커뮤니티 기능
-- 꿈 해석 공유 게시판
-- 다른 사용자와의 소통
-- 댓글 및 좋아요 기능
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-### 🛡️ 관리자 기능
-- 사용자 관리
-- 게시물 관리
-- 통계 및 모니터링
+### `npm test`
 
-## 🛠️ 기술 스택
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### Backend
-- **Node.js** & **Express.js** - 서버 프레임워크
-- **SQLite** - 데이터베이스
-- **OpenAI API** - AI 꿈 해석
-- **JWT** - 사용자 인증
-- **bcryptjs** - 비밀번호 암호화
+### `npm run build`
 
-### Frontend
-- **React** - UI 라이브러리
-- **React Router** - 클라이언트 라우팅
-- **Axios** - HTTP 클라이언트
-- **CSS3** - 스타일링
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-## 📦 설치 및 실행
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-### 1. 프로젝트 클론
-```bash
-git clone [repository-url]
-cd dream-interpretation
-```
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### 2. 의존성 설치
-```bash
-# 루트 디렉토리에서 백엔드 의존성 설치
-npm install
+### `npm run eject`
 
-# 클라이언트 의존성 설치
-cd client
-npm install
-cd ..
-```
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-### 3. 환경 변수 설정
-`.env` 파일을 생성하고 다음과 같이 설정:
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-```env
-OPENAI_API_KEY=your_openai_api_key_here
-JWT_SECRET=your_super_secret_jwt_key_here
-PORT=5000
-NODE_ENV=development
-CLIENT_URL=http://localhost:3000
-ADMIN_EMAIL=admin@dreaminterpretation.com
-ADMIN_PASSWORD=admin123456
-```
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-**중요**: 실제 OpenAI API 키를 발급받아 `OPENAI_API_KEY`에 설정해주세요.
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-### 4. 애플리케이션 실행
+## Learn More
 
-#### 개발 모드 (권장)
-```bash
-# 백엔드와 프론트엔드를 동시에 실행
-npm run dev
-```
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-#### 개별 실행
-```bash
-# 백엔드만 실행
-npm run server
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-# 새 터미널에서 프론트엔드 실행
-npm run client
-```
+### Code Splitting
 
-### 5. 접속
-- **프론트엔드**: http://localhost:3000
-- **백엔드 API**: http://localhost:5000
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-## 🗂️ 프로젝트 구조
+### Analyzing the Bundle Size
 
-```
-dream-interpretation/
-├── server/                 # 백엔드
-│   ├── index.js           # 메인 서버 파일
-│   ├── models/            # 데이터베이스 모델
-│   │   └── database.js
-│   ├── routes/            # API 라우트
-│   │   ├── auth.js
-│   │   ├── dreams.js
-│   │   ├── posts.js
-│   │   └── admin.js
-│   ├── middleware/        # 미들웨어
-│   │   └── auth.js
-│   └── utils/             # 유틸리티
-│       └── openai.js
-├── client/                # 프론트엔드
-│   ├── src/
-│   │   ├── components/    # 재사용 컴포넌트
-│   │   │   └── Navigation.js
-│   │   ├── contexts/      # React Context
-│   │   │   ├── AuthContext.js
-│   │   │   └── SessionContext.js
-│   │   ├── pages/         # 페이지 컴포넌트
-│   │   │   ├── Home.js
-│   │   │   ├── DreamInput.js
-│   │   │   ├── DreamResult.js
-│   │   │   ├── MyDreams.js
-│   │   │   ├── SharedPosts.js
-│   │   │   ├── Login.js
-│   │   │   ├── Register.js
-│   │   │   └── AdminDashboard.js
-│   │   └── utils/         # 유틸리티
-│   │       └── api.js
-│   └── public/
-├── package.json
-├── .env
-└── README.md
-```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-## 📖 API 엔드포인트
+### Making a Progressive Web App
 
-### 인증 관련
-- `POST /api/auth/login` - 로그인
-- `POST /api/auth/register` - 회원가입
-- `GET /api/auth/me` - 현재 사용자 정보
-- `POST /api/auth/verify` - 토큰 검증
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### 꿈 해석 관련
-- `POST /api/dreams/interpret` - 꿈 해석 요청
-- `GET /api/dreams/my-dreams` - 내 꿈 기록 조회
-- `GET /api/dreams/:id` - 특정 해석 조회
-- `POST /api/dreams/:id/share` - 꿈 공유
+### Advanced Configuration
 
-### 게시판 관련
-- `GET /api/posts` - 공유된 게시물 목록
-- `GET /api/posts/:id` - 게시물 상세 조회
-- `POST /api/posts/:id/comments` - 댓글 작성
-- `POST /api/posts/:id/like` - 좋아요 토글
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### 관리자 관련
-- `GET /api/admin/stats` - 통계 조회
-- `GET /api/admin/users` - 사용자 목록
-- `GET /api/admin/interpretations` - 모든 해석 목록
-- `DELETE /api/admin/users/:id` - 사용자 삭제
-- `DELETE /api/admin/interpretations/:id` - 해석 삭제
+### Deployment
 
-## 🎨 주요 특징
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-### 반응형 디자인
-- 모바일, 태블릿, 데스크톱 모든 기기에서 최적화된 UI
+### `npm run build` fails to minify
 
-### 사용자 친화적 인터페이스
-- 직관적이고 깔끔한 디자인
-- 로딩 상태 및 에러 처리
-- 실시간 피드백
-
-### 보안
-- JWT 기반 인증
-- 비밀번호 암호화
-- Rate Limiting
-- CORS 설정
-
-### 성능 최적화
-- 효율적인 데이터베이스 쿼리
-- API 응답 최적화
-- 컴포넌트 재사용
-
-## 🔧 개발 가이드
-
-### 새로운 기능 추가
-1. 백엔드 API 라우트 작성
-2. 프론트엔드 페이지/컴포넌트 구현
-3. API 클라이언트 함수 추가
-4. 라우팅 설정 업데이트
-
-### 데이터베이스 스키마 수정
-- `server/models/database.js`에서 테이블 구조 수정
-- 기존 데이터베이스 파일 삭제 후 재시작 (개발 환경)
-
-### 환경 변수 추가
-1. `.env.example` 파일에 예시 추가
-2. 실제 `.env` 파일에 값 설정
-3. 코드에서 `process.env.VARIABLE_NAME`으로 사용
-
-## 🤝 기여하기
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 라이선스
-
-이 프로젝트는 MIT 라이선스 하에 배포됩니다.
-
-## 📞 지원
-
-문제가 있으시거나 질문이 있으시면 이슈를 생성해주세요.
-
----
-
-**⚠️ 중요 공지**
-- 실제 운영 환경에서는 OpenAI API 키를 안전하게 관리하세요
-- 프로덕션 환경에서는 JWT_SECRET을 강력한 값으로 설정하세요
-- 데이터베이스는 실제 운영 시 PostgreSQL이나 MySQL 사용을 권장합니다
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

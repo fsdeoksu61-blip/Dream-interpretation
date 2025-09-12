@@ -19,9 +19,6 @@ const Home = () => {
             <Link to="/dream/new" className="cta-button primary">
               꿈 해석 시작하기
             </Link>
-            <Link to="/shared" className="cta-button secondary">
-              다른 사람의 꿈 보기
-            </Link>
           </div>
           <p className="hero-notice">✨ 회원가입 없이 이용 가능합니다</p>
         </div>
@@ -37,9 +34,9 @@ const Home = () => {
               <p>최신 AI 기술을 활용하여 당신의 꿈을 심리학적, 상징적 관점에서 해석해드립니다.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">👥</div>
-              <h3>꿈 공유 커뮤니티</h3>
-              <p>다른 사람들과 꿈을 공유하고, 댓글을 통해 소통할 수 있는 공간을 제공합니다.</p>
+              <div className="feature-icon">💾</div>
+              <h3>개인 맞춤 서비스</h3>
+              <p>회원가입하시면 꿈 해석 기록을 저장하고 언제든지 다시 확인하실 수 있습니다.</p>
             </div>
             <div className="feature-card">
               <div className="feature-icon">📝</div>
