@@ -4,7 +4,8 @@
       "Bash(npm install)",
       "Bash(copy .env.example .env)",
       "Bash(cp:*)",
-      "Read(/C:\\Users\\JC-1805302\\dream-interpretation/**)"
+      "Read(/C:\\Users\\JC-1805302\\dream-interpretation/**)",
+      "Bash(rm:*)"
     ],
     "deny": [],
     "ask": []
