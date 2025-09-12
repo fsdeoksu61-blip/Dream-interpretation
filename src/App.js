@@ -9,6 +9,9 @@ import Home from './pages/Home';
 import DreamInput from './pages/DreamInput';
 import DreamResult from './pages/DreamResult';
 import MyDreams from './pages/MyDreams';
+import QnA from './pages/QnA';
+import QnAWrite from './pages/QnAWrite';
+import QnADetail from './pages/QnADetail';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
@@ -34,6 +37,9 @@ function App() {
                     <Route path="/dream/new" element={<DreamInput />} />
                     <Route path="/dream/:id" element={<DreamResult />} />
                     <Route path="/my-dreams" element={<MyDreams />} />
+                    <Route path="/qna" element={<QnA />} />
+                    <Route path="/qna/write" element={<QnAWrite />} />
+                    <Route path="/qna/:id" element={<QnADetail />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/forgot-password" element={<ForgotPassword />} />

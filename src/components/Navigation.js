@@ -23,6 +23,7 @@ const Navigation = () => {
           <Link to="/" className="nav-link">홈</Link>
           <Link to="/dream/new" className="nav-link">꿈 해석</Link>
           <Link to="/my-dreams" className="nav-link">내 꿈 기록</Link>
+          <Link to="/qna" className="nav-link">Q&A</Link>
         </div>
 
         <div className="nav-auth">
