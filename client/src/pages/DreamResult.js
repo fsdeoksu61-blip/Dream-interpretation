@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { dreamAPI } from '../utils/api';
-import { useAuth } from '../contexts/AuthContext';
 import './DreamResult.css';
 
 const DreamResult = () => {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
   
   const [dreamData, setDreamData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,6 +15,18 @@ const DreamResult = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [sharing, setSharing] = useState(false);
   const [shareError, setShareError] = useState('');
+
+  const fetchDreamData = useCallback(async () => {
+    try {
+      const response = await dreamAPI.getDream(id);
+      setDreamData(response.data.interpretation);
+    } catch (error) {
+      console.error('Error fetching dream:', error);
+      setError('해석을 불러오는 중 오류가 발생했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  }, [id]);
 
   useEffect(() => {
     // If data was passed through navigation state, use it
@@ -32,19 +42,7 @@ const DreamResult = () => {
       // Otherwise, fetch from API
       fetchDreamData();
     }
-  }, [id, location.state]);
-
-  const fetchDreamData = async () => {
-    try {
-      const response = await dreamAPI.getDream(id);
-      setDreamData(response.data.interpretation);
-    } catch (error) {
-      console.error('Error fetching dream:', error);
-      setError('해석을 불러오는 중 오류가 발생했습니다.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [id, location.state, fetchDreamData]);
 
   const handleShare = async (e) => {
     e.preventDefault();

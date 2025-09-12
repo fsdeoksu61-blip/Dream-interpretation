@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { postAPI } from '../utils/api';
 import { useAuth } from '../contexts/AuthContext';
@@ -14,13 +14,7 @@ const PostDetail = () => {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
 
-  useEffect(() => {
-    if (id) {
-      fetchPost();
-    }
-  }, [id]);
-
-  const fetchPost = async () => {
+  const fetchPost = useCallback(async () => {
     try {
       setLoading(true);
       const response = await postAPI.getPost(id);
@@ -37,7 +31,13 @@ const PostDetail = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      fetchPost();
+    }
+  }, [id, fetchPost]);
 
   const handleLike = async () => {
     if (!isAuthenticated) {

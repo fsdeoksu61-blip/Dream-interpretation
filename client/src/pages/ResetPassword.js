@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { authAPI } from '../utils/api';
 import './Auth.css';
 
 function ResetPassword() {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);

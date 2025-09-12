@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
     return () => {
       setIsDestroyed(true);
     };
-  }, []);
+  }, [isDestroyed]);
 
   const login = async (email, password) => {
     if (isDestroyed) return { success: false, error: 'Component destroyed' };

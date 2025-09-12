@@ -20,7 +20,7 @@ function Footer() {
           <h4>정책</h4>
           <ul>
             <li><a href="/privacy-policy" target="_blank" rel="noopener noreferrer">개인정보 처리방침</a></li>
-            <li class="terms-disclaimer">
+            <li className="terms-disclaimer">
               <a href="/terms-of-service" target="_blank" rel="noopener noreferrer">이용약관</a>
               <span> | </span>
               <a href="/disclaimer" target="_blank" rel="noopener noreferrer">면책조항</a>
@@ -31,9 +31,9 @@ function Footer() {
         <div className="footer-section">
           <h4>소셜 미디어</h4>
           <div className="social-links">
-            <a href="#" aria-label="페이스북">📘</a>
-            <a href="#" aria-label="트위터">🐦</a>
-            <a href="#" aria-label="인스타그램">📷</a>
+            <button type="button" className="social-btn" aria-label="페이스북">📘</button>
+            <button type="button" className="social-btn" aria-label="트위터">🐦</button>
+            <button type="button" className="social-btn" aria-label="인스타그램">📷</button>
           </div>
         </div>
       </div>
