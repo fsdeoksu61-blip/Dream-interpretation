@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Bash(copy .env.example .env)",
+      "Bash(cp:*)",
+      "Read(/C:\\Users\\JC-1805302\\dream-interpretation/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

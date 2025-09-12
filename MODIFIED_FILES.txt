@@ -1,0 +1,20 @@
+📋 오늘 수정된 파일들 (2025-09-12)
+
+🔧 설정 파일:
+- vercel.json (새로 생성 + 수정됨)
+- client/.env (새로 생성)
+- client/package.json (cross-env 추가, ESLint 규칙 추가, vercel-build 스크립트)
+- package.json (deprecated 패키지 업데이트)
+
+🐛 ESLint 수정 파일:
+- client/src/components/Footer.js (접근성 문제 해결)
+- client/src/components/Navigation.js (사용하지 않는 navigate 제거)
+- client/src/contexts/AuthContext.js (useEffect 의존성 수정)
+- client/src/pages/DreamResult.js (사용하지 않는 변수 제거, useCallback 적용)
+- client/src/pages/Login.js (사용하지 않는 navigate 제거)
+- client/src/pages/PostDetail.js (useCallback 적용)
+- client/src/pages/Register.js (사용하지 않는 navigate 제거)
+- client/src/pages/ResetPassword.js (사용하지 않는 navigate 제거)
+
+📦 새로 설치된 패키지:
+- client/node_modules/cross-env (새로 추가)
