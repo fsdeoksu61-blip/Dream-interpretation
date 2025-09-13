@@ -6,7 +6,8 @@
       "Bash(cp:*)",
       "Read(/C:\\Users\\JC-1805302\\dream-interpretation/**)",
       "Bash(rm:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []

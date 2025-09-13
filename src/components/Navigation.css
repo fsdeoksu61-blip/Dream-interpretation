@@ -22,6 +22,12 @@
   gap: 2rem;
 }
 
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
 .nav-logo {
   font-size: 1.5rem;
   font-weight: bold;
@@ -57,6 +63,11 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+/* 데스크탑에서는 오른쪽 인증 버튼을 숨김 */
+.nav-auth-desktop {
+  display: none;
 }
 
 .user-menu {
@@ -101,6 +112,19 @@
   border-radius: 20px;
 }
 
+/* 데스크탑에서는 왼쪽 인증 버튼 숨기고 오른쪽 표시 */
+@media (min-width: 769px) {
+  .nav-auth {
+    display: none;
+  }
+  
+  .nav-auth-desktop {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
 /* 태블릿 화면 */
 @media (max-width: 768px) {
   .nav-container {
@@ -115,6 +139,10 @@
     margin-bottom: 8px;
   }
 
+  .nav-right {
+    width: 100%;
+  }
+
   .nav-links {
     gap: 0.8rem;
     flex-wrap: wrap;
@@ -123,6 +151,10 @@
 
   .nav-auth {
     gap: 0.8rem;
+  }
+
+  .nav-auth-desktop {
+    display: none;
   }
 
   .welcome-text {
