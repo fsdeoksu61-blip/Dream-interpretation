@@ -14,7 +14,7 @@
 }
 
 .dream-input-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #8fa4f3 0%, #9c88d4 100%);
   color: white;
   padding: 40px;
   text-align: center;
@@ -65,8 +65,8 @@
 
 .dream-textarea:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #8fa4f3;
+  box-shadow: 0 0 0 3px rgba(143, 164, 243, 0.1);
   background-color: white;
 }
 
@@ -106,7 +106,7 @@
 }
 
 .submit-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #8fa4f3 0%, #9c88d4 100%);
   color: white;
   border: none;
   padding: 18px 40px;
@@ -124,7 +124,7 @@
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgba(143, 164, 243, 0.3);
 }
 
 .submit-btn:disabled {
@@ -156,7 +156,7 @@
   padding: 30px;
   background: #f8f9fc;
   border-radius: 15px;
-  border-left: 4px solid #667eea;
+  border-left: 4px solid #8fa4f3;
 }
 
 .tips h3 {
@@ -185,7 +185,7 @@
   content: "✓";
   position: absolute;
   left: 0;
-  color: #667eea;
+  color: #8fa4f3;
   font-weight: bold;
 }
 

@@ -3,7 +3,7 @@
 }
 
 .hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #8fa4f3 0%, #9c88d4 100%);
   color: white;
   padding: 80px 20px;
   text-align: center;
@@ -59,7 +59,7 @@
 
 .cta-button.primary {
   background-color: #fff;
-  color: #667eea;
+  color: #8fa4f3;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
@@ -76,7 +76,7 @@
 
 .cta-button.secondary:hover {
   background-color: white;
-  color: #667eea;
+  color: #8fa4f3;
 }
 
 .cta-button.cta-compact {
@@ -169,7 +169,7 @@
 .step-number {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #8fa4f3 0%, #9c88d4 100%);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -193,7 +193,7 @@
 
 .cta-section, .welcome-back {
   padding: 80px 0;
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  background: linear-gradient(135deg, #9c88d4 0%, #8fa4f3 100%);
   color: white;
 }
 

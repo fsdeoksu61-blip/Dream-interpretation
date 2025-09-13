@@ -1,6 +1,6 @@
 .qna-write-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #8fa4f3 0%, #9c88d4 100%);
   padding: 2rem 0;
 }
 
@@ -69,7 +69,7 @@
 .form-textarea:focus,
 .form-select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #8fa4f3;
 }
 
 .form-input.error,
@@ -140,13 +140,13 @@
 }
 
 .submit-button {
-  background: linear-gradient(45deg, #667eea, #764ba2);
+  background: linear-gradient(45deg, #8fa4f3, #9c88d4);
   color: white;
 }
 
 .submit-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 5px 15px rgba(143, 164, 243, 0.4);
 }
 
 .submit-button:disabled {
@@ -200,7 +200,7 @@
   content: "✓";
   position: absolute;
   left: 0;
-  color: #667eea;
+  color: #8fa4f3;
   font-weight: bold;
 }
 

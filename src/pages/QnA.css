@@ -1,6 +1,6 @@
 .qna-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #8fa4f3 0%, #9c88d4 100%);
   padding: 2rem 0;
 }
 
@@ -31,7 +31,7 @@
 }
 
 .write-button, .empty-write-button {
-  background: linear-gradient(45deg, #667eea, #764ba2);
+  background: linear-gradient(45deg, #8fa4f3, #9c88d4);
   color: white;
   padding: 0.64rem 2rem;
   border: none;
@@ -88,9 +88,9 @@
 }
 
 .filter-tabs button.active {
-  background: linear-gradient(45deg, #667eea, #764ba2);
+  background: linear-gradient(45deg, #8fa4f3, #9c88d4);
   color: white;
-  border-color: #667eea;
+  border-color: #8fa4f3;
 }
 
 .filter-tabs button.active .tab-count {
@@ -99,8 +99,8 @@
 }
 
 .filter-tabs button:hover:not(.active) {
-  border-color: #667eea;
-  color: #667eea;
+  border-color: #8fa4f3;
+  color: #8fa4f3;
 }
 
 .search-box {
@@ -118,7 +118,7 @@
 
 .search-input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #8fa4f3;
 }
 
 .questions-list {
@@ -182,7 +182,7 @@
 }
 
 .question-title:hover {
-  color: #667eea;
+  color: #8fa4f3;
 }
 
 .question-meta {
@@ -198,7 +198,7 @@
   background: #f0f0f0;
   padding: 0.2rem 0.6rem;
   border-radius: 10px;
-  color: #667eea;
+  color: #8fa4f3;
   font-weight: 500;
 }
 
