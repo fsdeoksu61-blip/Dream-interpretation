@@ -62,7 +62,7 @@ body {
 /* 모바일에서 fixed navigation을 위한 패딩 */
 @media (max-width: 768px) {
   .main-content {
-    padding-top: 100px; /* Navigation 높이만큼 여백 추가 */
+    padding-top: 90px; /* Navigation 높이만큼 여백 추가 */
   }
 }
 
