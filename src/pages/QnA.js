@@ -85,19 +85,19 @@ const QnA = () => {
               className={filter === 'all' ? 'active' : ''} 
               onClick={() => setFilter('all')}
             >
-              전체 ({questions.length})
+              전체 <span className="tab-count">{questions.length}</span>
             </button>
             <button 
               className={filter === 'unanswered' ? 'active' : ''} 
               onClick={() => setFilter('unanswered')}
             >
-              답변대기 ({questions.filter(q => !q.answered).length})
+              답변대기 <span className="tab-count">{questions.filter(q => !q.answered).length}</span>
             </button>
             <button 
               className={filter === 'answered' ? 'active' : ''} 
               onClick={() => setFilter('answered')}
             >
-              답변완료 ({questions.filter(q => q.answered).length})
+              답변완료 <span className="tab-count">{questions.filter(q => q.answered).length}</span>
             </button>
           </div>
 

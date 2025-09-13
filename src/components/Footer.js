@@ -6,35 +6,33 @@ function Footer() {
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-section">
-          <h4>꿈해몽 서비스</h4>
-          <p>AI가 당신의 꿈을 해석해드립니다</p>
+          <span className="footer-inline">
+            <strong>꿈해몽 서비스:</strong> AI가 당신의 꿈을 해석해드립니다
+          </span>
         </div>
         
         <div className="footer-section">
-          <h4>사이트 정보</h4>
-          <p><strong>운영자:</strong> AI꿈해몽 팀</p>
-          <p><strong>이메일:</strong> admin@dreamai.co.kr</p>
+          <span className="footer-inline">
+            <strong>사이트 정보:</strong> 운영자 AI꿈해몽 팀 | 이메일 admin@dreamai.co.kr
+          </span>
         </div>
         
         <div className="footer-section">
-          <h4>정책</h4>
-          <ul>
-            <li><a href="/privacy-policy" target="_blank" rel="noopener noreferrer">개인정보 처리방침</a></li>
-            <li className="terms-disclaimer">
-              <a href="/terms-of-service" target="_blank" rel="noopener noreferrer">이용약관</a>
-              <span> | </span>
-              <a href="/disclaimer" target="_blank" rel="noopener noreferrer">면책조항</a>
-            </li>
-          </ul>
+          <span className="footer-inline">
+            <strong>정책:</strong> 
+            <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">개인정보 처리방침</a> | 
+            <a href="/terms-of-service" target="_blank" rel="noopener noreferrer">이용약관</a> | 
+            <a href="/disclaimer" target="_blank" rel="noopener noreferrer">면책조항</a>
+          </span>
         </div>
         
         <div className="footer-section">
-          <h4>소셜 미디어</h4>
-          <div className="social-links">
-            <button type="button" className="social-btn" aria-label="페이스북">📘</button>
-            <button type="button" className="social-btn" aria-label="트위터">🐦</button>
-            <button type="button" className="social-btn" aria-label="인스타그램">📷</button>
-          </div>
+          <span className="footer-inline">
+            <strong>소셜:</strong> 
+            <button type="button" className="social-btn-inline" aria-label="페이스북">📘</button>
+            <button type="button" className="social-btn-inline" aria-label="트위터">🐦</button>
+            <button type="button" className="social-btn-inline" aria-label="인스타그램">📷</button>
+          </span>
         </div>
       </div>
       

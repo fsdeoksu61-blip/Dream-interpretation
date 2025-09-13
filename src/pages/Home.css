@@ -18,7 +18,7 @@
 }
 
 .hero-title {
-  font-size: 3.5rem;
+  font-size: 1.65rem;
   font-weight: bold;
   margin-bottom: 20px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -47,8 +47,8 @@
 
 .cta-button {
   display: inline-block;
-  padding: 15px 30px;
-  font-size: 1.1rem;
+  padding: 11px 22px;
+  font-size: 0.825rem;
   font-weight: 600;
   text-decoration: none;
   border-radius: 50px;
@@ -79,6 +79,11 @@
   color: #667eea;
 }
 
+.cta-button.cta-compact {
+  padding: 8px 17px;
+  font-size: 0.62rem;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -86,50 +91,54 @@
 }
 
 .features {
-  padding: 80px 0;
+  padding: 50px 0;
   background-color: #f8f9fa;
 }
 
 .features h2 {
   text-align: center;
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: #333;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
 }
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
 }
 
 .feature-card {
   background: white;
-  padding: 40px 30px;
+  padding: 20px 25px;
   border-radius: 15px;
-  text-align: center;
+  text-align: left;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
 }
 
 .feature-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
 }
 
-.feature-icon {
-  font-size: 3rem;
-  margin-bottom: 20px;
+.feature-icon-inline {
+  font-size: 1.2rem;
+  margin-right: 8px;
+  vertical-align: middle;
 }
 
 .feature-card h3 {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: #333;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .feature-card p {
   color: #666;
-  line-height: 1.6;
+  line-height: 1.5;
+  font-size: 0.9rem;
 }
 
 .how-it-works {
@@ -224,8 +233,29 @@
     font-size: 1.1rem;
   }
 
+  .features {
+    padding: 40px 0;
+  }
+
   .features h2, .how-it-works h2, .cta-content h2, .welcome-content h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+  }
+
+  .features-grid {
+    gap: 15px;
+  }
+
+  .feature-card {
+    padding: 15px 20px;
+  }
+
+  .feature-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .feature-card p {
+    font-size: 0.85rem;
   }
 
   .cta-content h2, .welcome-content h2 {

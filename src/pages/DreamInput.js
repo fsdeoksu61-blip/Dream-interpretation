@@ -84,7 +84,7 @@ const DreamInput = () => {
       <div className="container">
         <div className="dream-input-card">
           <div className="dream-input-header">
-            <h1>🌙 꿈 해석하기</h1>
+            <h1>🔮 꿈 해석하기</h1>
             <p>당신의 꿈 이야기를 들려주세요. AI가 전통적, 심리학적 관점에서 해석해드릴게요.</p>
           </div>
 

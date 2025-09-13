@@ -10,7 +10,7 @@ const Home = () => {
     <div className="home">
       <section className="hero">
         <div className="hero-content">
-          <h1 className="hero-title">🌙 AI기반 꿈해몽 전문 사이트</h1>
+          <h1 className="hero-title">✨ AI기반 꿈해몽 전문 사이트</h1>
           <p className="hero-subtitle">
             이해하지 못 할 꿈을 꾸셨나요?<br />
             꿈 속에 숨겨진 의미를 해석하고 공유해보세요
@@ -29,23 +29,19 @@ const Home = () => {
           <h2>꿈해몽 서비스를 이용하면..</h2>
           <div className="features-grid">
             <div className="feature-card">
-              <div className="feature-icon">🔮</div>
-              <h3>AI 꿈 해석</h3>
+              <h3><span className="feature-icon-inline">🔮</span>AI 꿈 해석</h3>
               <p>최신 AI 기술을 활용하여 당신의 꿈을 심리학적, 상징적 관점에서 해석해드립니다.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">💾</div>
-              <h3>개인 맞춤 서비스</h3>
+              <h3><span className="feature-icon-inline">💾</span>개인 맞춤 서비스</h3>
               <p>회원가입하시면 꿈 해석 기록을 저장하고 언제든지 다시 확인하실 수 있습니다.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">📝</div>
-              <h3>꿈 기록 보관</h3>
+              <h3><span className="feature-icon-inline">📝</span>꿈 기록 보관</h3>
               <p>회원가입 없이도 이용 가능하며, 가입하면 꿈이 연동되어 더욱 현실적인 해석을 제공합니다.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">🔒</div>
-              <h3>안전한 환경</h3>
+              <h3><span className="feature-icon-inline">🔒</span>안전한 환경</h3>
               <p>개인정보 보호와 사용자의 프라이버시를 최우선으로 생각합니다.</p>
             </div>
           </div>
@@ -88,11 +84,8 @@ const Home = () => {
               <h2>더 많은 기능을 이용하고 싶으신가요?</h2>
               <p>회원 가입하시면 모든 꿈을 안전하게 보관하고, 더 많은 혜택과 더 많은 기능을 이용할 수 있습니다.</p>
               <div className="cta-buttons">
-                <Link to="/register" className="cta-button primary">
-                  회원가입하기
-                </Link>
-                <Link to="/login" className="cta-button secondary">
-                  로그인하기
+                <Link to="/register" className="cta-button primary cta-compact">
+                  회원가입/내꿈연동
                 </Link>
               </div>
             </div>

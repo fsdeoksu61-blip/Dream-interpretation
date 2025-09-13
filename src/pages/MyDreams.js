@@ -79,7 +79,7 @@ const MyDreams = () => {
           </p>
           <p className="spacer-line"></p>
           <div className="header-actions">
-            <Link to="/dream/new" className="btn-primary">
+            <Link to="/dream/new" className="btn-primary btn-compact">
               새 꿈 해석하기
             </Link>
           </div>
@@ -96,7 +96,7 @@ const MyDreams = () => {
             <div className="empty-icon">🌙</div>
             <h3>아직 해석한 꿈이 없습니다</h3>
             <p>첫 번째 꿈을 해석해보세요!</p>
-            <Link to="/dream/new" className="btn-primary">
+            <Link to="/dream/new" className="btn-primary btn-compact">
               꿈 해석 시작하기
             </Link>
           </div>

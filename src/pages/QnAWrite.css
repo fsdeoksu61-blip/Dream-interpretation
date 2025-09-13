@@ -22,7 +22,7 @@
 .write-header h1 {
   color: #333;
   margin-bottom: 0.5rem;
-  font-size: 2rem;
+  font-size: 1.65rem;
 }
 
 .write-header p {
@@ -215,7 +215,7 @@
   }
   
   .write-header h1 {
-    font-size: 1.5rem;
+    font-size: 1.65rem;
   }
   
   .write-form {

@@ -16,6 +16,12 @@
   height: 60px;
 }
 
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
 .nav-logo {
   font-size: 1.5rem;
   font-weight: bold;
@@ -103,17 +109,20 @@
     padding: 12px 20px;
   }
 
+  .nav-left {
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
   .nav-links {
-    order: 3;
     gap: 0.8rem;
-    margin-top: 8px;
     flex-wrap: wrap;
     justify-content: center;
   }
 
   .nav-auth {
-    order: 2;
-    margin: 5px 0;
+    gap: 0.8rem;
   }
 
   .welcome-text {
@@ -131,9 +140,13 @@
     padding: 10px 15px;
   }
 
+  .nav-left {
+    gap: 1rem;
+    margin-bottom: 6px;
+  }
+
   .nav-links {
     gap: 0.5rem;
-    margin-top: 6px;
   }
 
   .nav-link {

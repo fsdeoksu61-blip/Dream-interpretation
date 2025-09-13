@@ -22,7 +22,7 @@
 .qna-header h1 {
   color: #333;
   margin-bottom: 0.5rem;
-  font-size: 2rem;
+  font-size: 1.65rem;
 }
 
 .qna-header p {
@@ -33,7 +33,7 @@
 .write-button, .empty-write-button {
   background: linear-gradient(45deg, #667eea, #764ba2);
   color: white;
-  padding: 0.8rem 2rem;
+  padding: 0.64rem 2rem;
   border: none;
   border-radius: 25px;
   text-decoration: none;
@@ -66,19 +66,36 @@
 }
 
 .filter-tabs button {
-  padding: 0.6rem 1.2rem;
+  padding: 0.48rem 1.2rem;
   border: 2px solid #e0e0e0;
   background: white;
   border-radius: 20px;
   cursor: pointer;
   font-weight: 500;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.tab-count {
+  background: #f0f0f0;
+  color: #666;
+  padding: 0.1rem 0.4rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
 .filter-tabs button.active {
   background: linear-gradient(45deg, #667eea, #764ba2);
   color: white;
   border-color: #667eea;
+}
+
+.filter-tabs button.active .tab-count {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
 }
 
 .filter-tabs button:hover:not(.active) {
@@ -228,7 +245,7 @@
   }
   
   .qna-header h1 {
-    font-size: 1.5rem;
+    font-size: 1.65rem;
   }
   
   .qna-controls {
@@ -238,6 +255,17 @@
   
   .filter-tabs {
     justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .filter-tabs button {
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .tab-count {
+    font-size: 0.7rem;
+    padding: 0.05rem 0.3rem;
   }
   
   .search-box {
