@@ -33,11 +33,12 @@
 .write-button, .empty-write-button {
   background: linear-gradient(45deg, #8fa4f3, #9c88d4);
   color: white;
-  padding: 0.64rem 2rem;
+  padding: 11px 18px;
   border: none;
   border-radius: 25px;
   text-decoration: none;
   font-weight: 600;
+  font-size: 0.91rem;
   display: inline-block;
   transition: all 0.3s ease;
 }
