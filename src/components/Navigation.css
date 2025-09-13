@@ -131,13 +131,14 @@
 @media (max-width: 768px) {
   .navigation {
     /* 모바일에서 상단 여백 완전 제거 */
-    margin-top: 0;
-    padding-top: env(safe-area-inset-top);
+    margin: 0;
+    padding-top: 0;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    width: 100%;
+    width: 100vw;
+    box-sizing: border-box;
   }
 
   .nav-container {
