@@ -16,11 +16,22 @@ const MyDreams = () => {
 
   const fetchMyDreams = async () => {
     try {
-      const response = await dreamAPI.getMyDreams();
-      setDreams(response.data.interpretations);
+      // localStorage에서 꿈 해석 기록 가져오기 (데모 모드)
+      const savedInterpretations = localStorage.getItem('dream_interpretations');
+      if (savedInterpretations) {
+        const interpretations = JSON.parse(savedInterpretations);
+        // 최신순으로 정렬
+        const sortedInterpretations = interpretations.sort((a, b) => 
+          new Date(b.created_at) - new Date(a.created_at)
+        );
+        setDreams(sortedInterpretations);
+      } else {
+        setDreams([]);
+      }
     } catch (error) {
       console.error('Error fetching dreams:', error);
       setError('꿈 기록을 불러오는 중 오류가 발생했습니다.');
+      setDreams([]);
     } finally {
       setLoading(false);
     }

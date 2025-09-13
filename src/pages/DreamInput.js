@@ -26,22 +26,50 @@ const DreamInput = () => {
     setError('');
 
     try {
-      const response = await dreamAPI.interpret(dreamContent.trim());
+      // 데모 모드: localStorage를 사용한 가짜 AI 해석
+      const generateDreamInterpretation = (dreamText) => {
+        const interpretations = [
+          `당신의 꿈은 새로운 시작과 변화를 상징하고 있습니다. ${dreamText.includes('날') ? '하늘을 나는 것은 자유로움과 해방감을 의미합니다.' : ''} 현재 당신은 인생의 전환점에서 새로운 가능성을 탐색하고 있는 것 같습니다. 이 꿈은 당신의 무의식이 보내는 긍정적인 신호로 해석됩니다.`,
+          
+          `이 꿈은 당신의 내면의 불안과 걱정을 반영하고 있습니다. ${dreamText.includes('물') ? '물은 감정의 흐름을 상징합니다.' : ''} 최근 스트레스를 받고 있거나 중요한 결정을 앞두고 있지는 않으신가요? 이런 꿈은 마음의 정화 과정을 나타내기도 합니다.`,
+          
+          `당신의 꿈은 성장과 발전의 욕구를 나타냅니다. ${dreamText.includes('집') ? '집은 안정감과 소속감을 의미합니다.' : ''} 새로운 도전이나 학습에 대한 갈망이 꿈으로 나타난 것 같습니다. 이는 매우 긍정적인 신호로, 자신을 발전시키고자 하는 의지를 보여줍니다.`
+        ];
+        
+        return interpretations[Math.floor(Math.random() * interpretations.length)];
+      };
+
+      // 새로운 ID 생성
+      const dreamId = Date.now().toString();
+      
+      // 해석 결과 생성
+      const interpretation = generateDreamInterpretation(dreamContent);
+      
+      // 새로운 꿈 해석 데이터
+      const newDreamData = {
+        id: dreamId,
+        dream_content: dreamContent.trim(),
+        interpretation: interpretation,
+        created_at: new Date().toISOString(),
+        is_shared: false
+      };
+      
+      // localStorage에 저장
+      const savedInterpretations = JSON.parse(localStorage.getItem('dream_interpretations') || '[]');
+      savedInterpretations.unshift(newDreamData); // 최신 것을 앞에 추가
+      localStorage.setItem('dream_interpretations', JSON.stringify(savedInterpretations));
       
       // Navigate to result page with interpretation data
-      navigate(`/dream/${response.data.id}`, { 
+      navigate(`/dream/${dreamId}`, { 
         state: { 
-          interpretation: response.data.interpretation,
-          dreamContent: response.data.dreamContent,
-          id: response.data.id
+          interpretation: interpretation,
+          dreamContent: dreamContent.trim(),
+          id: dreamId
         }
       });
     } catch (error) {
       console.error('Dream interpretation error:', error);
-      setError(
-        error.response?.data?.error || 
-        '꿈 해석 중 오류가 발생했습니다. 다시 시도해주세요.'
-      );
+      setError('꿈 해석 중 오류가 발생했습니다. 다시 시도해주세요.');
       setLoading(false);
     }
   };

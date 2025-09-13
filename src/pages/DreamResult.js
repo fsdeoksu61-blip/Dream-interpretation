@@ -18,8 +18,20 @@ const DreamResult = () => {
 
   const fetchDreamData = useCallback(async () => {
     try {
-      const response = await dreamAPI.getDream(id);
-      setDreamData(response.data.interpretation);
+      // localStorage에서 꿈 해석 데이터 가져오기 (데모 모드)
+      const savedInterpretations = localStorage.getItem('dream_interpretations');
+      if (savedInterpretations) {
+        const interpretations = JSON.parse(savedInterpretations);
+        const dreamData = interpretations.find(dream => dream.id === id);
+        
+        if (dreamData) {
+          setDreamData(dreamData);
+        } else {
+          setError('해석을 찾을 수 없습니다.');
+        }
+      } else {
+        setError('저장된 해석이 없습니다.');
+      }
     } catch (error) {
       console.error('Error fetching dream:', error);
       setError('해석을 불러오는 중 오류가 발생했습니다.');
