@@ -39,7 +39,11 @@ function Footer() {
       </div>
       
       <div className="footer-bottom">
-        <p>&copy; 2025 꿈해몽 서비스. All rights reserved. | 본 서비스는 오락 목적으로만 사용되며, 의학적 조언을 대체할 수 없습니다.</p>
+        <p>
+          &copy; 2025 꿈해몽 서비스. All rights reserved.
+          <br className="mobile-break" />
+          본 서비스는 오락 목적으로만 사용되며, 의학적 조언을 대체할 수 없습니다.
+        </p>
       </div>
     </footer>
   );

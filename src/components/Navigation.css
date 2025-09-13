@@ -95,24 +95,62 @@
   border-radius: 20px;
 }
 
+/* 태블릿 화면 */
 @media (max-width: 768px) {
   .nav-container {
     flex-direction: column;
     height: auto;
-    padding: 15px 20px;
+    padding: 12px 20px;
   }
 
   .nav-links {
     order: 3;
-    gap: 1rem;
-    margin-top: 10px;
+    gap: 0.8rem;
+    margin-top: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .nav-auth {
     order: 2;
+    margin: 5px 0;
   }
 
   .welcome-text {
     display: none;
+  }
+
+  .auth-links {
+    gap: 0.8rem;
+  }
+}
+
+/* 작은 모바일 화면 */
+@media (max-width: 480px) {
+  .nav-container {
+    padding: 10px 15px;
+  }
+
+  .nav-links {
+    gap: 0.5rem;
+    margin-top: 6px;
+  }
+
+  .nav-link {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+
+  .nav-logo {
+    font-size: 1.3rem;
+  }
+
+  .auth-links {
+    gap: 0.5rem;
+  }
+
+  .logout-btn {
+    padding: 6px 12px;
+    font-size: 0.9rem;
   }
 }
