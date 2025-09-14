@@ -7,6 +7,7 @@ function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [tempPassword, setTempPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
@@ -18,6 +19,9 @@ function ForgotPassword() {
     try {
       const response = await authAPI.forgotPassword(email);
       setMessage(response.data.message);
+      if (response.data.tempPassword) {
+        setTempPassword(response.data.tempPassword);
+      }
       setEmail(''); // Clear email field
     } catch (error) {
       console.error('Forgot password error:', error);
@@ -38,20 +42,46 @@ function ForgotPassword() {
       <div className="auth-card">
         <div className="auth-header">
           <h2>비밀번호 찾기</h2>
-          <p>가입하신 이메일을 입력하시면 비밀번호 재설정 링크를 전송해드립니다.</p>
+          <p>가입하신 이메일을 입력하시면 임시 비밀번호를 생성해드립니다.</p>
         </div>
 
         {message && (
           <div className="success-message">
             <div className="success-content">
               <strong>✅ {message}</strong>
-              <p style={{ margin: '10px 0 0 0', fontSize: '0.9rem', color: '#666' }}>
-                이메일에서 재설정 링크를 클릭하여 새 비밀번호를 설정해주세요.
-              </p>
+              {tempPassword && (
+                <div style={{
+                  margin: '20px 0',
+                  padding: '15px',
+                  backgroundColor: '#fff',
+                  border: '2px solid #667eea',
+                  borderRadius: '8px',
+                  textAlign: 'center'
+                }}>
+                  <p style={{ margin: '0 0 10px 0', fontSize: '0.9rem', color: '#666' }}>
+                    새로운 임시 비밀번호:
+                  </p>
+                  <div style={{
+                    fontSize: '1.5rem',
+                    fontWeight: 'bold',
+                    color: '#667eea',
+                    fontFamily: 'monospace',
+                    letterSpacing: '2px',
+                    padding: '10px',
+                    backgroundColor: '#f8f9ff',
+                    borderRadius: '4px'
+                  }}>
+                    {tempPassword}
+                  </div>
+                  <p style={{ margin: '10px 0 0 0', fontSize: '0.85rem', color: '#e74c3c' }}>
+                    ⚠️ 로그인 후 반드시 비밀번호를 변경해주세요!
+                  </p>
+                </div>
+              )}
             </div>
             <div style={{ textAlign: 'center', marginTop: '20px' }}>
               <Link to="/login" className="submit-btn" style={{ textDecoration: 'none', display: 'inline-block' }}>
-                로그인하러 가기
+                임시 비밀번호로 로그인하기
               </Link>
             </div>
           </div>
@@ -74,12 +104,12 @@ function ForgotPassword() {
               />
             </div>
 
-            <button 
-              type="submit" 
-              className="submit-btn" 
+            <button
+              type="submit"
+              className="submit-btn"
               disabled={loading || !email.trim()}
             >
-              {loading ? '전송 중...' : '재설정 링크 전송'}
+              {loading ? '생성 중...' : '임시 비밀번호 생성'}
             </button>
           </form>
         )}
