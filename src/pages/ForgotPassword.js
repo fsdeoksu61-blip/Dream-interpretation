@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { authAPI } from '../utils/api';
+import { useAuth } from '../contexts/AuthContext';
 import './Auth.css';
 
 function ForgotPassword() {
@@ -9,6 +10,13 @@ function ForgotPassword() {
   const [message, setMessage] = useState('');
   const [tempPassword, setTempPassword] = useState('');
   const [error, setError] = useState('');
+
+  const { clearError } = useAuth();
+
+  // 컴포넌트 마운트 시 AuthContext 오류 초기화
+  useEffect(() => {
+    clearError();
+  }, [clearError]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

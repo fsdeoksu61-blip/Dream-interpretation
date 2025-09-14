@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './Auth.css';
@@ -11,8 +11,13 @@ const Register = () => {
     username: ''
   });
   const [errors, setErrors] = useState({});
-  
+
   const { register, loading, error, clearError } = useAuth();
+
+  // 컴포넌트 마운트 시 AuthContext 오류 초기화
+  useEffect(() => {
+    clearError();
+  }, [clearError]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
