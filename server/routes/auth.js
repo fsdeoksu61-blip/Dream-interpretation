@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const db = require('../models/database');
 const { authenticateToken, getSessionId } = require('../middleware/auth');
-const { sendPasswordResetEmail } = require('../utils/email');
 
 const router = express.Router();
 
@@ -139,7 +138,7 @@ router.post('/verify', (req, res) => {
   });
 });
 
-// Password reset request
+// Password reset request - Generate temporary password
 router.post('/forgot-password', async (req, res) => {
   try {
     const { email } = req.body;
@@ -156,38 +155,40 @@ router.post('/forgot-password', async (req, res) => {
 
       if (!user) {
         // 보안을 위해 사용자가 존재하지 않아도 성공 메시지 반환
-        return res.json({ message: '비밀번호 재설정 이메일을 전송했습니다.' });
+        return res.json({
+          message: '해당 이메일이 등록되어 있다면 임시 비밀번호가 생성되었습니다.'
+        });
       }
 
-      // Generate secure random token (32 bytes = 256 bits)
-      const resetToken = crypto.randomBytes(32).toString('hex');
-      
-      // Hash the token for storage
-      const tokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
-      
-      // Set expiration time (20 minutes from now)
-      const expiresAt = new Date();
-      expiresAt.setMinutes(expiresAt.getMinutes() + 20);
+      // Generate temporary password (8 characters: letters + numbers)
+      const tempPassword = crypto.randomBytes(4).toString('hex').toUpperCase();
 
-      // Store token in database
-      db.createPasswordResetToken(user.id, tokenHash, expiresAt.toISOString(), async (err, tokenId) => {
-        if (err) {
-          console.error('Error creating password reset token:', err);
-          return res.status(500).json({ error: '토큰 생성 중 오류가 발생했습니다.' });
-        }
+      try {
+        // Hash temporary password
+        const hashedTempPassword = await bcrypt.hash(tempPassword, 12);
 
-        // Send email with reset link
-        const emailResult = await sendPasswordResetEmail(email, resetToken);
+        // Update user's password to temporary password
+        db.updateUserPassword(user.email, hashedTempPassword, (err, changes) => {
+          if (err) {
+            console.error('Error updating temporary password:', err);
+            return res.status(500).json({ error: '임시 비밀번호 생성 중 오류가 발생했습니다.' });
+          }
 
-        if (!emailResult.success) {
-          console.error('Failed to send password reset email:', emailResult.error);
-          return res.status(500).json({ error: '이메일 전송 중 오류가 발생했습니다.' });
-        }
+          if (changes === 0) {
+            return res.status(400).json({ error: '임시 비밀번호 생성에 실패했습니다.' });
+          }
 
-        res.json({ 
-          message: '비밀번호 재설정 링크가 이메일로 전송되었습니다. (20분간 유효)' 
+          // Return temporary password to user
+          res.json({
+            message: '임시 비밀번호가 생성되었습니다.',
+            tempPassword: tempPassword,
+            notice: '보안을 위해 로그인 후 비밀번호를 변경해주세요.'
+          });
         });
-      });
+      } catch (hashError) {
+        console.error('Error hashing temporary password:', hashError);
+        res.status(500).json({ error: '임시 비밀번호 처리 중 오류가 발생했습니다.' });
+      }
     });
   } catch (error) {
     console.error('Forgot password error:', error);
