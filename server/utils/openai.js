@@ -34,7 +34,7 @@ class OpenAIService {
 해석:`;
 
       const response = await this.client.chat.completions.create({
-        model: "gpt-4o",
+        model: "gpt-5",
         messages: [
           {
             role: "system",
@@ -73,7 +73,7 @@ class OpenAIService {
 
     try {
       await this.client.chat.completions.create({
-        model: "gpt-4o",
+        model: "gpt-5",
         messages: [{ role: "user", content: "Hello" }],
         max_tokens: 5,
       });
