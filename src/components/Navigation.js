@@ -26,6 +26,9 @@ const Navigation = () => {
                 <span className="welcome-text">
                   안녕하세요, {user?.username}님!
                 </span>
+                <Link to="/settings" className="nav-link">
+                  설정
+                </Link>
                 {user?.is_admin && (
                   <Link to="/admin" className="nav-link admin-link">
                     관리자
@@ -58,6 +61,9 @@ const Navigation = () => {
                 <span className="welcome-text">
                   안녕하세요, {user?.username}님!
                 </span>
+                <Link to="/settings" className="nav-link">
+                  설정
+                </Link>
                 {user?.is_admin && (
                   <Link to="/admin" className="nav-link admin-link">
                     관리자

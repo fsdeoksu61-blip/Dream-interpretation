@@ -261,4 +261,61 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
+// Change password (for logged in users)
+router.post('/change-password', authenticateToken, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: '현재 비밀번호와 새 비밀번호를 입력해주세요.' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: '새 비밀번호는 최소 6자 이상이어야 합니다.' });
+    }
+
+    // Get user by email
+    db.getUserByEmail(req.user.email, async (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: '서버 오류가 발생했습니다.' });
+      }
+
+      if (!user) {
+        return res.status(404).json({ error: '사용자를 찾을 수 없습니다.' });
+      }
+
+      try {
+        // Verify current password
+        const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        if (!isCurrentPasswordValid) {
+          return res.status(400).json({ error: '현재 비밀번호가 올바르지 않습니다.' });
+        }
+
+        // Hash new password
+        const hashedNewPassword = await bcrypt.hash(newPassword, 12);
+
+        // Update password
+        db.updateUserPassword(user.email, hashedNewPassword, (err, changes) => {
+          if (err) {
+            console.error('Error updating password:', err);
+            return res.status(500).json({ error: '비밀번호 변경 중 오류가 발생했습니다.' });
+          }
+
+          if (changes === 0) {
+            return res.status(400).json({ error: '비밀번호 변경에 실패했습니다.' });
+          }
+
+          res.json({ message: '비밀번호가 성공적으로 변경되었습니다.' });
+        });
+      } catch (hashError) {
+        console.error('Error processing password:', hashError);
+        res.status(500).json({ error: '비밀번호 처리 중 오류가 발생했습니다.' });
+      }
+    });
+  } catch (error) {
+    console.error('Change password error:', error);
+    res.status(500).json({ error: '서버 오류가 발생했습니다.' });
+  }
+});
+
 module.exports = router;
