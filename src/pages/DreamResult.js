@@ -11,10 +11,7 @@ const DreamResult = () => {
   const [dreamData, setDreamData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [shareTitle, setShareTitle] = useState('');
-  const [showShareModal, setShowShareModal] = useState(false);
   const [sharing, setSharing] = useState(false);
-  const [shareError, setShareError] = useState('');
 
   const fetchDreamData = useCallback(async () => {
     try {
@@ -56,26 +53,23 @@ const DreamResult = () => {
     }
   }, [id, location.state, fetchDreamData]);
 
-  const handleShare = async (e) => {
-    e.preventDefault();
-    
-    if (!shareTitle.trim()) {
-      setShareError('제목을 입력해주세요.');
-      return;
-    }
-
+  const handleDirectShare = async () => {
     setSharing(true);
-    setShareError('');
+
+    // 꿈 내용의 첫 20글자를 기본 제목으로 사용
+    const defaultTitle = dreamData.dream_content
+      ? `${dreamData.dream_content.substring(0, 20).trim()}...의 꿈해석`
+      : '꿈해석 결과';
 
     try {
-      await dreamAPI.shareDream(id, shareTitle.trim());
-      setShowShareModal(false);
-      setShareTitle('');
+      await dreamAPI.shareDream(id, defaultTitle);
       alert('꿈이 성공적으로 공유되었습니다!');
+      // 페이지를 새로고침하여 공유 상태 업데이트
+      setDreamData(prev => ({ ...prev, is_shared: true }));
     } catch (error) {
       console.error('Share error:', error);
-      setShareError(
-        error.response?.data?.error || 
+      alert(
+        error.response?.data?.error ||
         '공유 중 오류가 발생했습니다.'
       );
     } finally {
@@ -173,11 +167,19 @@ const DreamResult = () => {
             </button>
 
             {!dreamData.is_shared && (
-              <button 
-                className="btn-share"
-                onClick={() => setShowShareModal(true)}
+              <button
+                className={`btn-share ${sharing ? 'loading' : ''}`}
+                onClick={handleDirectShare}
+                disabled={sharing}
               >
-                📤 공유하기
+                {sharing ? (
+                  <>
+                    <span className="loading-spinner"></span>
+                    공유 중...
+                  </>
+                ) : (
+                  '📤 공유하기'
+                )}
               </button>
             )}
           </div>
@@ -211,85 +213,6 @@ const DreamResult = () => {
         </div>
       </div>
 
-      {/* Share Modal */}
-      {showShareModal && (
-        <div className="modal-overlay" onClick={() => setShowShareModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3>꿈 공유하기</h3>
-              <button 
-                className="modal-close"
-                onClick={() => setShowShareModal(false)}
-              >
-                ✕
-              </button>
-            </div>
-            
-            <form onSubmit={handleShare}>
-              <div className="modal-body">
-                <p>다른 사람들과 이 꿈 해석을 공유하시겠어요?</p>
-                
-                <div className="form-group">
-                  <label htmlFor="shareTitle">공유 제목</label>
-                  <input
-                    type="text"
-                    id="shareTitle"
-                    value={shareTitle}
-                    onChange={(e) => {
-                      setShareTitle(e.target.value);
-                      if (shareError) setShareError('');
-                    }}
-                    placeholder="예: 하늘을 나는 꿈의 의미"
-                    maxLength="100"
-                    required
-                  />
-                  <div className="char-count-small">
-                    {shareTitle.length}/100
-                  </div>
-                </div>
-
-                {shareError && (
-                  <div className="error-message">
-                    {shareError}
-                  </div>
-                )}
-
-                <div className="share-info">
-                  <p>
-                    🔒 공유 시 꿈 내용과 해석이 게시판에 표시되지만, 
-                    개인정보는 보호됩니다.
-                  </p>
-                </div>
-              </div>
-
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn-secondary"
-                  onClick={() => setShowShareModal(false)}
-                  disabled={sharing}
-                >
-                  취소
-                </button>
-                <button
-                  type="submit"
-                  className={`btn-primary ${sharing ? 'loading' : ''}`}
-                  disabled={sharing || !shareTitle.trim()}
-                >
-                  {sharing ? (
-                    <>
-                      <span className="loading-spinner"></span>
-                      공유 중...
-                    </>
-                  ) : (
-                    '공유하기'
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
