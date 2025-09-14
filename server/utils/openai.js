@@ -34,19 +34,19 @@ class OpenAIService {
 해석:`;
 
       const response = await this.client.chat.completions.create({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o",
         messages: [
           {
             role: "system",
-            content: "당신은 전문적인 꿈 해석가입니다. 꿈의 상징과 의미를 심리학적, 철학적 관점에서 해석하며, 항상 긍정적이고 건설적인 방향으로 조언을 제공합니다. 한국어로 친근하고 이해하기 쉽게 설명해주세요."
+            content: "당신은 꿈해몽 전문가이자 친절한 상담사입니다. 사용자의 꿈을 해석하고, 따뜻하고 이해하기 쉽게 설명해 주세요."
           },
           {
             role: "user",
             content: prompt
           }
         ],
-        max_tokens: 1000,
-        temperature: 0.7,
+        max_tokens: 800,
+        temperature: 0.8,
       });
 
       return response.choices[0].message.content.trim();
@@ -73,7 +73,7 @@ class OpenAIService {
 
     try {
       await this.client.chat.completions.create({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o",
         messages: [{ role: "user", content: "Hello" }],
         max_tokens: 5,
       });
