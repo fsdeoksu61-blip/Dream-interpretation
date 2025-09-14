@@ -26,14 +26,6 @@ function Footer() {
           </span>
         </div>
         
-        <div className="footer-section">
-          <span className="footer-inline">
-            <strong>소셜:</strong> 
-            <button type="button" className="social-btn-inline" aria-label="페이스북">📘</button>
-            <button type="button" className="social-btn-inline" aria-label="트위터">🐦</button>
-            <button type="button" className="social-btn-inline" aria-label="인스타그램">📷</button>
-          </span>
-        </div>
       </div>
       
       <div className="footer-bottom">
