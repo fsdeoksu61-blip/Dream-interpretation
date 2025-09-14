@@ -33,7 +33,7 @@ class OpenAIService {
 4. 이 꿈이 전하는 희망적인 메시지와 실생활 조언
 5. 마무리로 격려와 응원의 말씀
 
-편안하고 친근한 어조로, 마치 가까운 친구나 상담사가 이야기하듯 자연스럽게 해석해 주세요.`;`
+편안하고 친근한 어조로, 마치 가까운 친구나 상담사가 이야기하듯 자연스럽게 해석해 주세요.`;
 
       const response = await this.client.chat.completions.create({
         model: "gpt-5",

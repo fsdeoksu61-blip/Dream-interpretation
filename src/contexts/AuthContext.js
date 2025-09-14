@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
     const storedToken = localStorage.getItem('token');
     if (storedToken) {
       // Verify token with backend
-      axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5009'}/api/auth/verify`, { token: storedToken })
+      axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/auth/verify`, { token: storedToken })
         .then(response => {
           if (!isDestroyed) {
             if (response.data.valid) {
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       
-      const response = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5009'}/api/auth/login`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/auth/login`, {
         email,
         password
       });
@@ -90,7 +90,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       
-      const response = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:5009'}/api/auth/register`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/auth/register`, {
         email,
         password,
         username
