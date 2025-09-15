@@ -142,11 +142,21 @@
   align-items: center;
   font-size: 0.9rem;
   color: #666;
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: #f8f9ff;
+  border-radius: 8px;
 }
 
 .post-author {
   font-weight: 600;
-  color: #8fa4f3;
+  color: #667eea;
+  background: #e8eeff;
+  padding: 4px 8px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .post-date {

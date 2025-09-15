@@ -80,10 +80,10 @@ const SharedPosts = () => {
                   <h3 className="post-title">{post.title}</h3>
                   <div className="post-meta">
                     <span className="post-author">
-                      {post.author_username || '익명'}
+                      👤 {post.author_username || '익명 사용자'}
                     </span>
                     <span className="post-date">
-                      {formatDate(post.created_at)}
+                      📅 {formatDate(post.created_at)}
                     </span>
                   </div>
                 </div>

@@ -289,25 +289,49 @@ class Database {
   getSharedPosts(callback) {
     const query = `
       SELECT sp.*, di.dream_content, di.interpretation, di.created_at as interpretation_date,
-             u.username as author_username
+             u.username as author_username, di.session_id, di.user_id
       FROM shared_posts sp
       JOIN dream_interpretations di ON sp.interpretation_id = di.id
       LEFT JOIN users u ON di.user_id = u.id
       ORDER BY sp.created_at DESC
     `;
-    this.db.all(query, callback);
+    this.db.all(query, (err, posts) => {
+      if (err) return callback(err);
+
+      // 게스트 사용자를 위한 표시명 생성
+      const processedPosts = posts.map(post => {
+        if (!post.author_username && post.session_id) {
+          // 세션 ID의 마지막 6자리를 사용해서 게스트 구분
+          const shortSessionId = post.session_id.slice(-6);
+          post.author_username = `게스트${shortSessionId}`;
+        }
+        return post;
+      });
+
+      callback(null, processedPosts);
+    });
   }
 
   getSharedPostById(id, callback) {
     const query = `
       SELECT sp.*, di.dream_content, di.interpretation, di.created_at as interpretation_date,
-             u.username as author_username
+             u.username as author_username, di.session_id, di.user_id
       FROM shared_posts sp
       JOIN dream_interpretations di ON sp.interpretation_id = di.id
       LEFT JOIN users u ON di.user_id = u.id
       WHERE sp.id = ?
     `;
-    this.db.get(query, [id], callback);
+    this.db.get(query, [id], (err, post) => {
+      if (err) return callback(err);
+
+      if (post && !post.author_username && post.session_id) {
+        // 세션 ID의 마지막 6자리를 사용해서 게스트 구분
+        const shortSessionId = post.session_id.slice(-6);
+        post.author_username = `게스트${shortSessionId}`;
+      }
+
+      callback(null, post);
+    });
   }
 
   incrementPostViews(postId, callback) {
