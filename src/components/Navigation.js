@@ -6,6 +6,10 @@ import './Navigation.css';
 const Navigation = () => {
   const { user, isAuthenticated, logout } = useAuth();
 
+  // 디버깅용
+  console.log('Navigation - isAuthenticated:', isAuthenticated);
+  console.log('Navigation - user:', user);
+
   const handleLogout = () => {
     // Immediately redirect to prevent React state conflicts
     logout();
@@ -52,7 +56,7 @@ const Navigation = () => {
             <Link to="/" className="nav-link">홈</Link>
             <Link to="/dream/new" className="nav-link">꿈 해석</Link>
             <Link to="/my-dreams" className="nav-link">꿈 해석 둘러보기</Link>
-            {isAuthenticated && (
+            {(isAuthenticated || user) && (
               <Link to="/dream-diary" className="nav-link">
                 내 꿈 일기장
               </Link>

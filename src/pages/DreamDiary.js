@@ -4,7 +4,11 @@ import { dreamAPI } from '../utils/api';
 import './DreamDiary.css';
 
 const DreamDiary = () => {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+
+  // 디버깅용
+  console.log('DreamDiary - isAuthenticated:', isAuthenticated);
+  console.log('DreamDiary - user:', user);
   const [dreams, setDreams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
