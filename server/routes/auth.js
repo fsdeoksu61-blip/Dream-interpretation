@@ -404,25 +404,48 @@ router.get('/cleanup-legacy', (req, res) => {
 
   console.log('🧹 레거시 공유 게시물 정리 시작...');
 
-  db.db ?
-    // SQLite용
-    db.db.run('DELETE FROM posts WHERE interpretation_id IN (SELECT id FROM dream_interpretations WHERE session_id IS NOT NULL)', function(err) {
-      if (err) {
-        console.error('SQLite 레거시 포스트 삭제 오류:', err);
-        return res.status(500).json({ error: '정리 중 오류가 발생했습니다.' });
-      }
-      console.log('✅ SQLite 레거시 포스트 삭제됨:', this.changes);
-      res.json({ message: `${this.changes}개의 레거시 게시물이 삭제되었습니다.` });
-    }) :
-    // PostgreSQL용
-    db.pool.query('DELETE FROM shared_posts WHERE interpretation_id IN (SELECT id FROM interpretations WHERE session_id IS NOT NULL)', (err, result) => {
-      if (err) {
-        console.error('PostgreSQL 레거시 포스트 삭제 오류:', err);
-        return res.status(500).json({ error: '정리 중 오류가 발생했습니다.' });
-      }
-      console.log('✅ PostgreSQL 레거시 포스트 삭제됨:', result.rowCount);
-      res.json({ message: `${result.rowCount}개의 레거시 게시물이 삭제되었습니다.` });
-    });
+  // 먼저 현재 공유 게시물 조회
+  db.getSharedPosts((err, posts) => {
+    if (err) {
+      console.error('공유 게시물 조회 오류:', err);
+      return res.status(500).json({
+        error: '공유 게시물 조회 중 오류가 발생했습니다.',
+        details: err.message
+      });
+    }
+
+    console.log('현재 공유 게시물:', posts.length + '개');
+    const legacyPosts = posts.filter(post => post.session_id && !post.user_id);
+    console.log('레거시 게시물:', legacyPosts.length + '개');
+
+    if (legacyPosts.length === 0) {
+      return res.json({ message: '삭제할 레거시 게시물이 없습니다.' });
+    }
+
+    // PostgreSQL 방식으로 삭제
+    if (db.pool) {
+      const legacyIds = legacyPosts.map(post => post.interpretation_id);
+      console.log('삭제할 interpretation_id:', legacyIds);
+
+      db.pool.query(
+        'DELETE FROM shared_posts WHERE interpretation_id = ANY($1)',
+        [legacyIds],
+        (err, result) => {
+          if (err) {
+            console.error('PostgreSQL 레거시 포스트 삭제 오류:', err);
+            return res.status(500).json({
+              error: '삭제 중 오류가 발생했습니다.',
+              details: err.message
+            });
+          }
+          console.log('✅ PostgreSQL 레거시 포스트 삭제됨:', result.rowCount);
+          res.json({ message: `${result.rowCount}개의 레거시 게시물이 삭제되었습니다.` });
+        }
+      );
+    } else {
+      return res.status(500).json({ error: 'PostgreSQL 연결이 없습니다.' });
+    }
+  });
 });
 
 module.exports = router;
