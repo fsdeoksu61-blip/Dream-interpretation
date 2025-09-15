@@ -86,26 +86,8 @@ const Login = () => {
                 <div style={{ marginBottom: '10px' }}>
                   {error}
                 </div>
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                  {error.includes('존재하지 않는 사용자') && (
-                    <Link
-                      to="/register"
-                      className="error-action-button"
-                      style={{
-                        display: 'inline-block',
-                        padding: '8px 16px',
-                        backgroundColor: '#667eea',
-                        color: 'white',
-                        textDecoration: 'none',
-                        borderRadius: '4px',
-                        fontSize: '0.9rem',
-                        fontWeight: 'bold'
-                      }}
-                    >
-                      회원가입하기
-                    </Link>
-                  )}
-                  {error.includes('비밀번호') && (
+                {error.includes('비밀번호') && (
+                  <div>
                     <Link
                       to="/forgot-password"
                       className="error-action-button"
@@ -122,8 +104,8 @@ const Login = () => {
                     >
                       비밀번호 찾기
                     </Link>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             )}
 
