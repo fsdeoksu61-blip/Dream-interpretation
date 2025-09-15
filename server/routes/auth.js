@@ -372,4 +372,18 @@ router.post('/make-admin', async (req, res) => {
   }
 });
 
+// Database connection check (for debugging)
+router.get('/db-status', (req, res) => {
+  const dbType = process.env.DATABASE_URL ? 'PostgreSQL' : 'SQLite';
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  res.json({
+    database_type: dbType,
+    environment: process.env.NODE_ENV || 'development',
+    is_production: isProduction,
+    database_url_exists: !!process.env.DATABASE_URL,
+    message: `현재 ${dbType} 데이터베이스를 사용 중입니다.`
+  });
+});
+
 module.exports = router;
