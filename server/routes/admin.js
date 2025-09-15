@@ -53,16 +53,20 @@ router.get('/stats', (req, res) => {
       const totalInterpretations = interpretations.length;
       const sharedInterpretations = interpretations.filter(i => i.is_shared).length;
 
-      // Get shared posts count
+      // Get shared posts count (with error handling)
       db.getSharedPosts((err, posts) => {
-        if (err) {
-          console.error('Database error:', err);
-          return res.status(500).json({ error: '통계를 불러오는 중 오류가 발생했습니다.' });
-        }
+        let totalSharedPosts = 0;
+        let totalViews = 0;
+        let totalLikes = 0;
 
-        const totalSharedPosts = posts.length;
-        const totalViews = posts.reduce((sum, post) => sum + post.views, 0);
-        const totalLikes = posts.reduce((sum, post) => sum + post.likes, 0);
+        if (err) {
+          console.error('getSharedPosts error (continuing with defaults):', err);
+          // Continue with default values instead of failing completely
+        } else {
+          totalSharedPosts = posts.length;
+          totalViews = posts.reduce((sum, post) => sum + (post.views || 0), 0);
+          totalLikes = posts.reduce((sum, post) => sum + (post.likes || 0), 0);
+        }
 
         res.json({
           stats: {
@@ -125,15 +129,17 @@ router.get('/activity', (req, res) => {
       .slice(0, 10);
 
     db.getSharedPosts((err, posts) => {
-      if (err) {
-        console.error('Database error:', err);
-        return res.status(500).json({ error: '활동 내역을 불러오는 중 오류가 발생했습니다.' });
-      }
+      let recentPosts = [];
 
-      // Get latest 10 shared posts
-      const recentPosts = posts
-        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        .slice(0, 10);
+      if (err) {
+        console.error('getSharedPosts error in activity (continuing with empty array):', err);
+        // Continue with empty array instead of failing completely
+      } else {
+        // Get latest 10 shared posts
+        recentPosts = posts
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+          .slice(0, 10);
+      }
 
       res.json({
         recentInterpretations,
