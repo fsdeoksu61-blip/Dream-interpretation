@@ -176,23 +176,26 @@ class Database {
 
   createDefaultAdmin() {
     const bcrypt = require('bcryptjs');
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
-    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
-    
+    const adminEmail = 'admin@dreamai.co.kr';
+    const adminPassword = 'password123';
+
+    // Create admin@dreamai.co.kr account if it doesn't exist
     this.db.get('SELECT * FROM users WHERE email = ?', [adminEmail], (err, row) => {
       if (!row) {
         const hashedPassword = bcrypt.hashSync(adminPassword, 12);
         this.db.run(
           'INSERT INTO users (email, password, username, is_admin) VALUES (?, ?, ?, ?)',
-          [adminEmail, hashedPassword, 'Admin', true],
+          [adminEmail, hashedPassword, 'Administrator', 1],
           (err) => {
             if (err) {
               console.error('Error creating admin user:', err);
             } else {
-              console.log('Default admin user created');
+              console.log('✅ Default admin user created: admin@dreamai.co.kr');
             }
           }
         );
+      } else {
+        console.log('✅ Admin user already exists: admin@dreamai.co.kr');
       }
     });
   }
