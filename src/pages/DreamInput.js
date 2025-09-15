@@ -27,7 +27,7 @@ const DreamInput = () => {
 
     try {
       // 서버 API를 사용하여 실제 AI 해석 요청
-      const response = await dreamAPI.interpretDream({ dreamContent: dreamContent.trim() });
+      const response = await dreamAPI.interpret(dreamContent.trim());
 
       // 서버에서 저장된 해석 결과를 받아옴
       const dreamData = response.data;
