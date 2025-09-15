@@ -6,7 +6,13 @@ class Database {
     // DATABASE_URL이 있으면 PostgreSQL 사용, 없으면 SQLite 사용
     if (process.env.DATABASE_URL) {
       console.log('🔄 PostgreSQL 데이터베이스로 연결 중...');
-      this.initPostgreSQL();
+      try {
+        this.initPostgreSQL();
+      } catch (error) {
+        console.error('❌ PostgreSQL 연결 실패:', error);
+        console.log('🔄 SQLite로 fallback...');
+        this.initSQLite();
+      }
     } else {
       console.log('🔄 SQLite 데이터베이스로 연결 중... (개발 환경)');
       this.initSQLite();
@@ -20,7 +26,10 @@ class Database {
     });
 
     console.log('✅ PostgreSQL 연결 완료');
-    this.initPostgreSQLTables();
+    this.initPostgreSQLTables().catch(error => {
+      console.error('❌ PostgreSQL 테이블 초기화 실패:', error);
+      throw error;
+    });
   }
 
   async initPostgreSQLTables() {
@@ -266,6 +275,14 @@ class Database {
   }
 
   createInterpretation(data, callback) {
+    console.log('🔄 Creating interpretation:', {
+      hasPool: !!this.pool,
+      hasDb: !!this.db,
+      userId: data.user_id,
+      sessionId: data.session_id,
+      contentLength: data.dream_content?.length
+    });
+
     if (this.pool) {
       // PostgreSQL
       this.pool.query(
@@ -273,21 +290,32 @@ class Database {
         [data.user_id, data.session_id, data.dream_content, data.interpretation, data.is_shared || false],
         (err, result) => {
           if (err) {
+            console.error('❌ PostgreSQL insert error:', err);
             callback(err);
           } else {
+            console.log('✅ PostgreSQL insert success:', result.rows[0].id);
             callback(null, result.rows[0].id);
           }
         }
       );
-    } else {
+    } else if (this.db) {
       // SQLite
       this.db.run(
         'INSERT INTO dream_interpretations (user_id, session_id, dream_content, interpretation, is_shared) VALUES (?, ?, ?, ?, ?)',
         [data.user_id, data.session_id, data.dream_content, data.interpretation, data.is_shared || false],
         function(err) {
-          callback(err, this ? this.lastID : null);
+          if (err) {
+            console.error('❌ SQLite insert error:', err);
+            callback(err);
+          } else {
+            console.log('✅ SQLite insert success:', this.lastID);
+            callback(null, this.lastID);
+          }
         }
       );
+    } else {
+      console.error('❌ No database connection available');
+      callback(new Error('데이터베이스 연결이 없습니다.'));
     }
   }
 

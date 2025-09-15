@@ -45,9 +45,13 @@ router.post('/interpret', authenticateOptional, getSessionId, async (req, res) =
     });
 
   } catch (error) {
-    console.error('Dream interpretation error:', error);
-    res.status(500).json({ 
-      error: error.message || '꿈 해석 중 오류가 발생했습니다.' 
+    console.error('Dream interpretation error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
+    res.status(500).json({
+      error: error.message || '꿈 해석 중 오류가 발생했습니다.'
     });
   }
 });
