@@ -2,25 +2,37 @@ const OpenAI = require('openai');
 
 class OpenAIService {
   constructor() {
+    console.log('🔍 OpenAI 설정 확인:', {
+      hasAPIKey: !!process.env.OPENAI_API_KEY,
+      keyLength: process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.length : 0,
+      keyStart: process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.substring(0, 10) + '...' : 'none'
+    });
+
     if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your_openai_api_key_here') {
-      console.log('OpenAI API key not provided or is placeholder - using demo mode');
+      console.log('⚠️ OpenAI API key not provided or is placeholder - using demo mode');
       this.client = null;
       return;
     }
-    
+
     this.client = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     });
-    console.log('OpenAI client initialized successfully');
+    console.log('✅ OpenAI client initialized successfully');
   }
 
   async interpretDream(dreamContent) {
+    console.log('🔄 꿈해석 요청 시작:', {
+      hasClient: !!this.client,
+      dreamContentLength: dreamContent?.length || 0
+    });
+
     if (!this.client) {
-      // OpenAI API가 없을 때 데모용 해석 제공
+      console.log('⚠️ OpenAI 클라이언트 없음 - 데모 모드 사용');
       return this.getDemoInterpretation(dreamContent);
     }
 
     try {
+      console.log('🚀 OpenAI API 호출 시작...');
       const prompt = `안녕하세요! 제가 당신의 꿈을 따뜻하게 해석해드리겠습니다.
 
 꿈 내용: ${dreamContent}
@@ -51,9 +63,15 @@ class OpenAIService {
         temperature: 0.8,
       });
 
+      console.log('✅ OpenAI API 응답 성공');
       return response.choices[0].message.content.trim();
     } catch (error) {
-      console.error('OpenAI API Error:', error);
+      console.error('❌ OpenAI API Error 상세:', {
+        message: error.message,
+        status: error.status,
+        code: error.code,
+        type: error.type
+      });
       
       if (error.status === 401) {
         throw new Error('OpenAI API 키가 유효하지 않습니다.');
