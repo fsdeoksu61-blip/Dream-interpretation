@@ -36,7 +36,7 @@ class OpenAIService {
 편안하고 친근한 어조로, 마치 가까운 친구나 상담사가 이야기하듯 자연스럽게 해석해 주세요.`;
 
       const response = await this.client.chat.completions.create({
-        model: "gpt-5",
+        model: "gpt-4o",
         messages: [
           {
             role: "system",
@@ -75,7 +75,7 @@ class OpenAIService {
 
     try {
       await this.client.chat.completions.create({
-        model: "gpt-5",
+        model: "gpt-4o",
         messages: [{ role: "user", content: "Hello" }],
         max_tokens: 5,
       });
