@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
+import { adminAPI } from '../utils/api';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
@@ -13,8 +13,6 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_URL = process.env.REACT_APP_API_URL || 'https://dream-interpretation-production.up.railway.app';
-
   useEffect(() => {
     if (user && user.is_admin && token) {
       loadDashboardData();
@@ -24,13 +22,12 @@ const AdminDashboard = () => {
   const loadDashboardData = async () => {
     try {
       setLoading(true);
-      const headers = { Authorization: `Bearer ${token}` };
 
       const [statsRes, usersRes, interpretationsRes, activityRes] = await Promise.all([
-        axios.get(`${API_URL}/api/admin/stats`, { headers }),
-        axios.get(`${API_URL}/api/admin/users`, { headers }),
-        axios.get(`${API_URL}/api/admin/interpretations`, { headers }),
-        axios.get(`${API_URL}/api/admin/activity`, { headers })
+        adminAPI.getStats(),
+        adminAPI.getUsers(),
+        adminAPI.getInterpretations(),
+        adminAPI.getActivity()
       ]);
 
       setStats(statsRes.data.stats);
@@ -49,9 +46,7 @@ const AdminDashboard = () => {
     if (!window.confirm('정말 이 사용자를 삭제하시겠습니까?')) return;
 
     try {
-      await axios.delete(`${API_URL}/api/admin/users/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await adminAPI.deleteUser(userId);
       setUsers(users.filter(u => u.id !== userId));
       alert('사용자가 삭제되었습니다.');
     } catch (err) {
@@ -64,9 +59,7 @@ const AdminDashboard = () => {
     if (!window.confirm('정말 이 해석을 삭제하시겠습니까?')) return;
 
     try {
-      await axios.delete(`${API_URL}/api/admin/interpretations/${interpretationId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await adminAPI.deleteInterpretation(interpretationId);
       setInterpretations(interpretations.filter(i => i.id !== interpretationId));
       alert('해석이 삭제되었습니다.');
     } catch (err) {
