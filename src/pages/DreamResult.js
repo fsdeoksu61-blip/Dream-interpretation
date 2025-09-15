@@ -215,7 +215,7 @@ const DreamResult = () => {
               꿈 해석 둘러보기
             </button>
 
-            {!dreamData.is_shared && dreamData.source !== 'localStorage' && (
+            {!dreamData.is_shared && dreamData.source !== 'localStorage' && dreamData.source !== 'navigation' && (
               <button
                 className={`btn-share ${sharing ? 'loading' : ''}`}
                 onClick={handleDirectShare}
