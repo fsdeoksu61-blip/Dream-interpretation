@@ -5,7 +5,7 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://dream-interpretat
 // Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 60000, // 60초로 증가 (OpenAI API 응답 시간 고려)
 });
 
 // Request interceptor to add session ID
