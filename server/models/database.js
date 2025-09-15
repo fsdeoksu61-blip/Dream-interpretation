@@ -3,10 +3,9 @@ const bcrypt = require('bcryptjs');
 
 class Database {
   constructor() {
-    // DATABASE_URL이 있고 실제 PostgreSQL을 사용하고 싶은 경우에만 PostgreSQL 사용
-    // 기본적으로 SQLite 사용 (더 안정적)
-    if (process.env.USE_POSTGRESQL && process.env.DATABASE_URL) {
-      console.log('🔄 PostgreSQL 데이터베이스로 연결 중...');
+    // Railway 프로덕션 환경에서는 데이터 지속성을 위해 PostgreSQL 우선 사용
+    if (process.env.NODE_ENV === 'production' && process.env.DATABASE_URL) {
+      console.log('🔄 PostgreSQL 데이터베이스로 연결 중... (프로덕션 환경)');
       try {
         this.initPostgreSQL();
       } catch (error) {
