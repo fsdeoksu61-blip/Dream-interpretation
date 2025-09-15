@@ -27,29 +27,20 @@ const DreamInput = () => {
 
     try {
       // 서버 API를 사용하여 실제 AI 해석 요청
-      console.log('🔄 꿈 해석 요청 시작...');
       const response = await dreamAPI.interpret(dreamContent.trim());
 
       // 서버에서 저장된 해석 결과를 받아옴
       const dreamData = response.data;
-      console.log('✅ 꿈 해석 응답 받음:', dreamData);
 
       // 해석 결과 페이지로 이동 (서버에 저장된 데이터 사용)
       if (dreamData && dreamData.id) {
-        console.log('🔄 해석 결과 페이지로 이동:', dreamData.id);
         navigate(`/dream/${dreamData.id}`);
       } else {
-        console.error('❌ 응답에 ID가 없음:', dreamData);
         setError('해석 결과를 불러오는 중 오류가 발생했습니다.');
         setLoading(false);
       }
     } catch (error) {
       console.error('Dream interpretation error:', error);
-      console.error('Error details:', {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data
-      });
       setError('꿈 해석 중 오류가 발생했습니다. 다시 시도해주세요.');
       setLoading(false);
     }
