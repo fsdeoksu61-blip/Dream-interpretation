@@ -120,7 +120,7 @@ const Home = () => {
                   새 꿈 해석하기
                 </Link>
                 <Link to="/my-dreams" className="cta-button secondary">
-                  내 꿈 기록 보기
+                  꿈 해석 둘러보기
                 </Link>
               </div>
             </div>

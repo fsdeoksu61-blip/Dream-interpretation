@@ -212,7 +212,7 @@ const DreamResult = () => {
               className="btn-secondary"
               onClick={() => navigate('/my-dreams')}
             >
-              내 꿈 기록 보기
+              꿈 해석 둘러보기
             </button>
 
             {!dreamData.is_shared && dreamData.source !== 'localStorage' && (
