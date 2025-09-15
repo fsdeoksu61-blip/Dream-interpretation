@@ -152,8 +152,28 @@ class Database {
   initSQLite() {
     const sqlite3 = require('sqlite3').verbose();
     const path = require('path');
+    const os = require('os');
 
-    this.db = new sqlite3.Database(path.join(__dirname, '../database.db'));
+    // Railway에서는 임시 디렉토리를 사용하거나 메모리 DB 사용
+    let dbPath;
+    if (process.env.NODE_ENV === 'production' && process.env.RAILWAY_ENVIRONMENT) {
+      // Railway 환경에서는 메모리 데이터베이스 사용
+      dbPath = ':memory:';
+      console.log('🔄 메모리 SQLite 데이터베이스 사용 (Railway 환경)');
+    } else {
+      // 로컬 개발 환경에서는 파일 데이터베이스 사용
+      dbPath = path.join(__dirname, '../database.db');
+      console.log('🔄 파일 SQLite 데이터베이스 사용 (개발 환경)');
+    }
+
+    this.db = new sqlite3.Database(dbPath, (err) => {
+      if (err) {
+        console.error('❌ SQLite 연결 오류:', err);
+        throw err;
+      } else {
+        console.log('✅ SQLite 연결 성공:', dbPath);
+      }
+    });
 
     this.db.serialize(() => {
       this.db.run("PRAGMA encoding = 'UTF-8';");
