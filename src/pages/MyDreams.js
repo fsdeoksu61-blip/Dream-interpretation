@@ -16,12 +16,33 @@ const MyDreams = () => {
 
   const fetchMyDreams = async () => {
     try {
-      // localStorage에서 꿈 해석 기록 가져오기 (데모 모드)
+      // 먼저 서버에서 해석 데이터를 가져오기 시도
+      try {
+        const response = await dreamAPI.getMyDreams();
+        if (response.data.interpretations && response.data.interpretations.length > 0) {
+          // 서버 데이터가 있으면 서버 데이터 사용
+          const sortedInterpretations = response.data.interpretations.sort((a, b) =>
+            new Date(b.created_at) - new Date(a.created_at)
+          );
+          setDreams(sortedInterpretations);
+          setLoading(false);
+          return;
+        }
+      } catch (serverError) {
+        console.log('Server data not found, trying localStorage:', serverError.response?.data?.error || serverError.message);
+      }
+
+      // 서버에서 데이터가 없거나 오류가 발생하면 localStorage 사용 (fallback)
       const savedInterpretations = localStorage.getItem('dream_interpretations');
       if (savedInterpretations) {
         const interpretations = JSON.parse(savedInterpretations);
+        // localStorage 데이터에 source 표시 추가
+        const interpretationsWithSource = interpretations.map(interpretation => ({
+          ...interpretation,
+          source: 'localStorage'
+        }));
         // 최신순으로 정렬
-        const sortedInterpretations = interpretations.sort((a, b) => 
+        const sortedInterpretations = interpretationsWithSource.sort((a, b) =>
           new Date(b.created_at) - new Date(a.created_at)
         );
         setDreams(sortedInterpretations);
@@ -126,12 +147,17 @@ const MyDreams = () => {
                 </div>
                 
                 <div className="dream-card-footer">
-                  <Link 
+                  <Link
                     to={`/dream/${dream.id}`}
                     className="btn-secondary"
                   >
                     자세히 보기
                   </Link>
+                  {dream.source === 'localStorage' && (
+                    <div className="local-notice">
+                      <small>📱 로컬 저장 - 공유 불가</small>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

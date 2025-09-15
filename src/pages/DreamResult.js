@@ -36,7 +36,11 @@ const DreamResult = () => {
         const dreamData = interpretations.find(dream => dream.id === id);
 
         if (dreamData) {
-          setDreamData(dreamData);
+          // localStorage 데이터에 source 표시 추가
+          setDreamData({
+            ...dreamData,
+            source: 'localStorage'
+          });
         } else {
           setError('해석을 찾을 수 없습니다.');
         }
@@ -58,7 +62,8 @@ const DreamResult = () => {
         id: location.state.id,
         dream_content: location.state.dreamContent,
         interpretation: location.state.interpretation,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+        source: 'navigation' // 새로 생성된 해석
       });
       setLoading(false);
     } else {
@@ -210,7 +215,7 @@ const DreamResult = () => {
               내 꿈 기록 보기
             </button>
 
-            {!dreamData.is_shared && (
+            {!dreamData.is_shared && dreamData.source !== 'localStorage' && (
               <button
                 className={`btn-share ${sharing ? 'loading' : ''}`}
                 onClick={handleDirectShare}
@@ -225,6 +230,13 @@ const DreamResult = () => {
                   '📤 공유하기'
                 )}
               </button>
+            )}
+
+            {dreamData.source === 'localStorage' && (
+              <div className="local-storage-notice">
+                <p>📱 이 해석은 브라우저에만 저장되어 공유할 수 없습니다.</p>
+                <p><small>회원가입 후 새 해석을 받으면 공유 기능을 사용할 수 있습니다.</small></p>
+              </div>
             )}
           </div>
 
