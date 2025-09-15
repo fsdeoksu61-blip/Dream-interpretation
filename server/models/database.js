@@ -3,8 +3,9 @@ const bcrypt = require('bcryptjs');
 
 class Database {
   constructor() {
-    // DATABASE_URL이 있으면 PostgreSQL 사용, 없으면 SQLite 사용
-    if (process.env.DATABASE_URL) {
+    // DATABASE_URL이 있고 실제 PostgreSQL을 사용하고 싶은 경우에만 PostgreSQL 사용
+    // 기본적으로 SQLite 사용 (더 안정적)
+    if (process.env.USE_POSTGRESQL && process.env.DATABASE_URL) {
       console.log('🔄 PostgreSQL 데이터베이스로 연결 중...');
       try {
         this.initPostgreSQL();
@@ -14,7 +15,7 @@ class Database {
         this.initSQLite();
       }
     } else {
-      console.log('🔄 SQLite 데이터베이스로 연결 중... (개발 환경)');
+      console.log('🔄 SQLite 데이터베이스로 연결 중...');
       this.initSQLite();
     }
   }
