@@ -12,10 +12,10 @@ const Login = () => {
 
   const { login, loading, error, clearError } = useAuth();
 
-  // 컴포넌트 마운트 시 AuthContext 오류 초기화
+  // 컴포넌트 마운트 시에만 AuthContext 오류 초기화
   useEffect(() => {
     clearError();
-  }, [clearError]);
+  }, []); // clearError 의존성 제거하여 마운트 시에만 실행
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -83,7 +83,47 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="auth-form">
             {error && (
               <div className="error-message global-error">
-                {error}
+                <div style={{ marginBottom: '10px' }}>
+                  {error}
+                </div>
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                  {error.includes('존재하지 않는 사용자') && (
+                    <Link
+                      to="/register"
+                      className="error-action-button"
+                      style={{
+                        display: 'inline-block',
+                        padding: '8px 16px',
+                        backgroundColor: '#667eea',
+                        color: 'white',
+                        textDecoration: 'none',
+                        borderRadius: '4px',
+                        fontSize: '0.9rem',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      회원가입하기
+                    </Link>
+                  )}
+                  {error.includes('비밀번호') && (
+                    <Link
+                      to="/forgot-password"
+                      className="error-action-button"
+                      style={{
+                        display: 'inline-block',
+                        padding: '8px 16px',
+                        backgroundColor: '#28a745',
+                        color: 'white',
+                        textDecoration: 'none',
+                        borderRadius: '4px',
+                        fontSize: '0.9rem',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      비밀번호 찾기
+                    </Link>
+                  )}
+                </div>
               </div>
             )}
 
