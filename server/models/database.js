@@ -177,8 +177,68 @@ class Database {
         )
       `);
 
-      // 기타 테이블들... (기존 SQLite 테이블 정의)
-      // 여기서는 간소화하여 주요 테이블만 정의
+      // Sessions table
+      this.db.run(`
+        CREATE TABLE IF NOT EXISTS sessions (
+          id TEXT PRIMARY KEY,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          expires_at DATETIME
+        )
+      `);
+
+      // Dream interpretations table
+      this.db.run(`
+        CREATE TABLE IF NOT EXISTS dream_interpretations (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER,
+          session_id TEXT,
+          dream_content TEXT NOT NULL,
+          interpretation TEXT NOT NULL,
+          is_shared BOOLEAN DEFAULT FALSE,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users (id)
+        )
+      `);
+
+      // Posts table for shared dreams
+      this.db.run(`
+        CREATE TABLE IF NOT EXISTS posts (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          interpretation_id INTEGER,
+          title TEXT,
+          likes INTEGER DEFAULT 0,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (interpretation_id) REFERENCES dream_interpretations (id)
+        )
+      `);
+
+      // Comments table
+      this.db.run(`
+        CREATE TABLE IF NOT EXISTS comments (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          post_id INTEGER,
+          content TEXT NOT NULL,
+          username TEXT,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (post_id) REFERENCES posts (id)
+        )
+      `);
+
+      // Community posts table
+      this.db.run(`
+        CREATE TABLE IF NOT EXISTS community_posts (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER,
+          title TEXT NOT NULL,
+          content TEXT NOT NULL,
+          views INTEGER DEFAULT 0,
+          likes INTEGER DEFAULT 0,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users (id)
+        )
+      `);
+
+      console.log('✅ SQLite 테이블 생성 완료');
     });
 
     this.createDefaultAdminSQLite();
