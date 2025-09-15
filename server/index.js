@@ -65,6 +65,17 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Dream Interpretation API is running' });
 });
 
+// Environment check (temporary debug endpoint)
+app.get('/api/debug/env', (req, res) => {
+  res.json({
+    hasOpenAIKey: !!process.env.OPENAI_API_KEY,
+    openAIKeyLength: process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.length : 0,
+    openAIKeyPreview: process.env.OPENAI_API_KEY ? process.env.OPENAI_API_KEY.substring(0, 10) + '...' : 'none',
+    nodeEnv: process.env.NODE_ENV,
+    railwayEnv: process.env.RAILWAY_ENVIRONMENT
+  });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
