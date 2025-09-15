@@ -10,69 +10,49 @@ const router = express.Router();
 // Register
 router.post('/register', getSessionId, async (req, res) => {
   try {
-    console.log('🔄 Registration request:', {
-      email: req.body.email,
-      username: req.body.username,
-      sessionId: req.sessionId
-    });
-
     const { email, password, username } = req.body;
 
     if (!email || !password || !username) {
-      console.log('❌ Missing fields');
       return res.status(400).json({ error: '모든 필드를 입력해주세요.' });
     }
 
     // Check if user already exists
-    console.log('🔄 Checking if user exists...');
     db.getUserByEmail(email, async (err, existingUser) => {
       if (err) {
-        console.error('❌ Error checking existing user:', err);
+        console.error('Error checking existing user:', err);
         return res.status(500).json({ error: '서버 오류가 발생했습니다.' });
       }
 
       if (existingUser) {
-        console.log('❌ User already exists');
         return res.status(400).json({ error: '이미 존재하는 이메일입니다.' });
       }
 
-      console.log('✅ User does not exist, creating new user...');
-
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 12);
-      console.log('✅ Password hashed');
 
       // Create user
-      console.log('🔄 Creating user in database...');
       db.createUser(email, hashedPassword, username, (err, userId) => {
         if (err) {
-          console.error('❌ Error creating user:', err);
+          console.error('Error creating user:', err);
           return res.status(500).json({ error: '회원가입 중 오류가 발생했습니다.' });
         }
 
-        console.log('✅ User created with ID:', userId);
-
         // Migrate guest data if session exists
         if (req.sessionId) {
-          console.log('🔄 Migrating guest data...');
           db.migrateGuestData(req.sessionId, userId, (err) => {
             if (err) {
-              console.error('❌ Error migrating guest data:', err);
-            } else {
-              console.log('✅ Guest data migrated');
+              console.error('Error migrating guest data:', err);
             }
           });
         }
 
         // Create JWT token
-        console.log('🔄 Creating JWT token...');
         const token = jwt.sign(
           { id: userId, email, username, is_admin: false },
           process.env.JWT_SECRET,
           { expiresIn: '7d' }
         );
 
-        console.log('✅ Registration successful');
         res.status(201).json({
           message: '회원가입이 완료되었습니다.',
           token,
@@ -81,7 +61,7 @@ router.post('/register', getSessionId, async (req, res) => {
       });
     });
   } catch (error) {
-    console.error('❌ Register error:', error);
+    console.error('Register error:', error);
     res.status(500).json({ error: '서버 오류가 발생했습니다.' });
   }
 });
