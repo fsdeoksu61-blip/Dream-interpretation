@@ -15,12 +15,26 @@ const DreamResult = () => {
 
   const fetchDreamData = useCallback(async () => {
     try {
-      // localStorage에서 꿈 해석 데이터 가져오기 (데모 모드)
+      // 먼저 서버에서 해석 데이터를 가져오기 시도
+      try {
+        const response = await dreamAPI.getDream(id);
+        // API는 { interpretation } 형태로 반환하므로 interpretation 필드 사용
+        const interpretation = response.data.interpretation;
+        if (interpretation) {
+          setDreamData(interpretation);
+          setLoading(false);
+          return;
+        }
+      } catch (serverError) {
+        console.log('Server data not found, trying localStorage:', serverError.response?.data?.error || serverError.message);
+      }
+
+      // 서버에서 찾을 수 없으면 localStorage에서 가져오기 (fallback)
       const savedInterpretations = localStorage.getItem('dream_interpretations');
       if (savedInterpretations) {
         const interpretations = JSON.parse(savedInterpretations);
         const dreamData = interpretations.find(dream => dream.id === id);
-        
+
         if (dreamData) {
           setDreamData(dreamData);
         } else {
@@ -62,9 +76,13 @@ const DreamResult = () => {
       : '꿈해석 결과';
 
     try {
-      await dreamAPI.shareDream(id, defaultTitle);
+      // dreamData에 서버 ID가 있으면 사용, 없으면 현재 URL의 id 사용
+      const dreamId = dreamData.id || id;
+
+      await dreamAPI.shareDream(dreamId, defaultTitle);
       alert('꿈이 성공적으로 공유되었습니다!');
-      // 페이지를 새로고침하여 공유 상태 업데이트
+
+      // 공유 상태 업데이트
       setDreamData(prev => ({ ...prev, is_shared: true }));
     } catch (error) {
       console.error('Share error:', error);
@@ -72,17 +90,31 @@ const DreamResult = () => {
 
       if (error.response) {
         // 서버에서 응답이 왔지만 오류 상태
-        errorMessage = error.response.data?.error || `서버 오류 (${error.response.status})`;
+        const status = error.response.status;
+        const serverError = error.response.data?.error;
+
+        if (status === 404) {
+          errorMessage = '해석을 찾을 수 없습니다. 이 해석이 서버에 저장되어 있는지 확인해주세요.';
+        } else if (status === 403) {
+          errorMessage = '이 해석을 공유할 권한이 없습니다.';
+        } else if (status === 400 && serverError?.includes('이미 공유된')) {
+          errorMessage = '이미 공유된 해석입니다.';
+          setDreamData(prev => ({ ...prev, is_shared: true }));
+        } else {
+          errorMessage = serverError || `서버 오류 (${status})`;
+        }
       } else if (error.request) {
         // 요청은 보냈지만 응답이 없음 (네트워크 오류)
-        errorMessage = '서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.';
+        errorMessage = '서버에 연결할 수 없습니다. 네트워크 연결을 확인하고 다시 시도해주세요.';
       }
 
       alert(errorMessage);
-      console.log('Error details:', {
+      console.log('Share error details:', {
+        dreamId: dreamData.id || id,
         response: error.response?.data,
         status: error.response?.status,
-        message: error.message
+        message: error.message,
+        dreamData: dreamData
       });
     } finally {
       setSharing(false);
