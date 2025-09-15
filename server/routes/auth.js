@@ -394,6 +394,34 @@ router.get('/db-status', (req, res) => {
   });
 });
 
+// Clear all shared posts (GET 방식으로도 접근 가능)
+router.get('/cleanup-all-posts', (req, res) => {
+  // 관리자만 접근 가능하도록 간단한 체크
+  const { secret } = req.query;
+  if (secret !== 'cleanup2024') {
+    return res.status(403).json({ error: '권한이 없습니다.' });
+  }
+
+  console.log('🧹 모든 공유 게시물 정리 시작...');
+
+  // PostgreSQL에서 모든 shared_posts 삭제
+  if (db.pool) {
+    db.pool.query('DELETE FROM shared_posts', (err, result) => {
+      if (err) {
+        console.error('PostgreSQL 공유 게시물 삭제 오류:', err);
+        return res.status(500).json({
+          error: '삭제 중 오류가 발생했습니다.',
+          details: err.message
+        });
+      }
+      console.log('✅ 모든 공유 게시물 삭제됨:', result.rowCount);
+      res.json({ message: `${result.rowCount}개의 공유 게시물이 모두 삭제되었습니다.` });
+    });
+  } else {
+    return res.status(500).json({ error: 'PostgreSQL 연결이 없습니다.' });
+  }
+});
+
 // Cleanup legacy posts (GET 방식으로도 접근 가능)
 router.get('/cleanup-legacy', (req, res) => {
   // 관리자만 접근 가능하도록 간단한 체크
