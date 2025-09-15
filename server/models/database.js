@@ -762,6 +762,84 @@ class Database {
       this.db.run(query, [id], callback);
     }
   }
+
+  getAllInterpretations(callback) {
+    console.log('🔄 Getting all interpretations for admin');
+
+    if (this.pool) {
+      // PostgreSQL
+      this.pool.query(
+        'SELECT * FROM dream_interpretations ORDER BY created_at DESC',
+        [],
+        (err, result) => {
+          if (err) {
+            console.error('❌ PostgreSQL getAllInterpretations error:', err);
+            callback(err);
+          } else {
+            console.log('✅ PostgreSQL getAllInterpretations success:', result.rows.length);
+            callback(null, result.rows);
+          }
+        }
+      );
+    } else if (this.db) {
+      // SQLite
+      this.db.all(
+        'SELECT * FROM dream_interpretations ORDER BY created_at DESC',
+        [],
+        (err, rows) => {
+          if (err) {
+            console.error('❌ SQLite getAllInterpretations error:', err);
+            callback(err);
+          } else {
+            console.log('✅ SQLite getAllInterpretations success:', rows.length);
+            callback(null, rows);
+          }
+        }
+      );
+    } else {
+      console.error('❌ No database connection for getAllInterpretations');
+      callback(new Error('데이터베이스 연결이 없습니다.'));
+    }
+  }
+
+  deleteInterpretation(id, callback) {
+    console.log('🔄 Deleting interpretation:', id);
+
+    if (this.pool) {
+      // PostgreSQL
+      this.pool.query(
+        'DELETE FROM dream_interpretations WHERE id = $1',
+        [id],
+        (err, result) => {
+          if (err) {
+            console.error('❌ PostgreSQL deleteInterpretation error:', err);
+            callback(err);
+          } else {
+            console.log('✅ PostgreSQL deleteInterpretation success');
+            callback(null);
+          }
+        }
+      );
+    } else if (this.db) {
+      // SQLite
+      this.db.run(
+        'DELETE FROM dream_interpretations WHERE id = ?',
+        [id],
+        (err) => {
+          if (err) {
+            console.error('❌ SQLite deleteInterpretation error:', err);
+            callback(err);
+          } else {
+            console.log('✅ SQLite deleteInterpretation success');
+            callback(null);
+          }
+        }
+      );
+    } else {
+      console.error('❌ No database connection for deleteInterpretation');
+      callback(new Error('데이터베이스 연결이 없습니다.'));
+    }
+  }
 }
 
 module.exports = new Database();
