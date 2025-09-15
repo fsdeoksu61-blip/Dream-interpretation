@@ -61,10 +61,6 @@ const Navigation = () => {
                 내 꿈 일기장
               </Link>
             )}
-            {/* 디버깅용 - 항상 표시 */}
-            <Link to="/dream-diary" className="nav-link" style={{color: 'red'}}>
-              [테스트] 꿈일기
-            </Link>
             <Link to="/qna" className="nav-link">Q&A</Link>
           </div>
           
