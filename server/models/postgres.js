@@ -266,7 +266,7 @@ class PostgreSQLDatabase {
         sp.created_at,
         i.dream_content,
         i.interpretation,
-        u.username
+        u.username AS author_username
       FROM shared_posts sp
       JOIN interpretations i ON sp.interpretation_id = i.id
       LEFT JOIN users u ON i.user_id = u.id
@@ -275,8 +275,10 @@ class PostgreSQLDatabase {
 
     this.pool.query(query, (err, result) => {
       if (err) {
+        console.error('PostgreSQL getSharedPosts error:', err);
         callback(err);
       } else {
+        console.log('📋 공유 게시물 조회 성공:', result.rows.length + '개');
         callback(null, result.rows);
       }
     });
@@ -293,7 +295,7 @@ class PostgreSQLDatabase {
         sp.created_at,
         i.dream_content,
         i.interpretation,
-        u.username
+        u.username AS author_username
       FROM shared_posts sp
       JOIN interpretations i ON sp.interpretation_id = i.id
       LEFT JOIN users u ON i.user_id = u.id

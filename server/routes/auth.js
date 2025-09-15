@@ -377,12 +377,20 @@ router.get('/db-status', (req, res) => {
   const dbType = process.env.DATABASE_URL ? 'PostgreSQL' : 'SQLite';
   const isProduction = process.env.NODE_ENV === 'production';
 
-  res.json({
-    database_type: dbType,
-    environment: process.env.NODE_ENV || 'development',
-    is_production: isProduction,
-    database_url_exists: !!process.env.DATABASE_URL,
-    message: `현재 ${dbType} 데이터베이스를 사용 중입니다.`
+  // Test shared posts count
+  db.getSharedPosts((err, posts) => {
+    const sharedPostsCount = err ? 0 : posts.length;
+    const sharedPostsError = err ? err.message : null;
+
+    res.json({
+      database_type: dbType,
+      environment: process.env.NODE_ENV || 'development',
+      is_production: isProduction,
+      database_url_exists: !!process.env.DATABASE_URL,
+      shared_posts_count: sharedPostsCount,
+      shared_posts_error: sharedPostsError,
+      message: `현재 ${dbType} 데이터베이스를 사용 중입니다. 공유 게시물: ${sharedPostsCount}개`
+    });
   });
 });
 
