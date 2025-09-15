@@ -99,7 +99,16 @@ router.post('/:id/share', authenticateOptional, getSessionId, (req, res) => {
   const interpretationId = req.params.id;
   const { title } = req.body;
 
+  console.log('🔄 Share request received:', {
+    interpretationId,
+    title,
+    userId: req.user?.id,
+    sessionId: req.sessionId,
+    user: req.user?.username
+  });
+
   if (!title || title.trim().length === 0) {
+    console.log('❌ Title missing');
     return res.status(400).json({ error: '제목을 입력해주세요.' });
   }
 
