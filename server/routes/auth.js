@@ -415,11 +415,31 @@ router.get('/cleanup-legacy', (req, res) => {
     }
 
     console.log('현재 공유 게시물:', posts.length + '개');
+    console.log('게시물 상세:', posts.map(p => ({
+      id: p.id,
+      title: p.title,
+      user_id: p.user_id,
+      session_id: p.session_id,
+      author_username: p.author_username
+    })));
+
     const legacyPosts = posts.filter(post => post.session_id && !post.user_id);
     console.log('레거시 게시물:', legacyPosts.length + '개');
 
     if (legacyPosts.length === 0) {
-      return res.json({ message: '삭제할 레거시 게시물이 없습니다.' });
+      // 응답에 상세 정보 포함
+      return res.json({
+        message: '삭제할 레거시 게시물이 없습니다.',
+        total_posts: posts.length,
+        legacy_posts: 0,
+        posts_detail: posts.map(p => ({
+          id: p.id,
+          title: p.title?.substring(0, 20) + '...',
+          user_id: p.user_id,
+          session_id: p.session_id?.substring(0, 8) + '...',
+          author_username: p.author_username
+        }))
+      });
     }
 
     // PostgreSQL 방식으로 삭제
