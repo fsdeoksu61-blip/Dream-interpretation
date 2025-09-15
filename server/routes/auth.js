@@ -394,4 +394,35 @@ router.get('/db-status', (req, res) => {
   });
 });
 
+// Cleanup legacy posts (GET 방식으로도 접근 가능)
+router.get('/cleanup-legacy', (req, res) => {
+  // 관리자만 접근 가능하도록 간단한 체크
+  const { secret } = req.query;
+  if (secret !== 'cleanup2024') {
+    return res.status(403).json({ error: '권한이 없습니다.' });
+  }
+
+  console.log('🧹 레거시 공유 게시물 정리 시작...');
+
+  db.db ?
+    // SQLite용
+    db.db.run('DELETE FROM posts WHERE interpretation_id IN (SELECT id FROM dream_interpretations WHERE session_id IS NOT NULL)', function(err) {
+      if (err) {
+        console.error('SQLite 레거시 포스트 삭제 오류:', err);
+        return res.status(500).json({ error: '정리 중 오류가 발생했습니다.' });
+      }
+      console.log('✅ SQLite 레거시 포스트 삭제됨:', this.changes);
+      res.json({ message: `${this.changes}개의 레거시 게시물이 삭제되었습니다.` });
+    }) :
+    // PostgreSQL용
+    db.pool.query('DELETE FROM shared_posts WHERE interpretation_id IN (SELECT id FROM interpretations WHERE session_id IS NOT NULL)', (err, result) => {
+      if (err) {
+        console.error('PostgreSQL 레거시 포스트 삭제 오류:', err);
+        return res.status(500).json({ error: '정리 중 오류가 발생했습니다.' });
+      }
+      console.log('✅ PostgreSQL 레거시 포스트 삭제됨:', result.rowCount);
+      res.json({ message: `${result.rowCount}개의 레거시 게시물이 삭제되었습니다.` });
+    });
+});
+
 module.exports = router;
