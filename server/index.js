@@ -14,7 +14,14 @@ app.set('trust proxy', 1);
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: [
+    'https://www.koreandreamai.com',
+    'https://koreandreamai.com',
+    'https://www.dreamai.co.kr',
+    'https://dreamai.co.kr',
+    'http://localhost:3000',
+    'http://localhost:3002'
+  ],
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
