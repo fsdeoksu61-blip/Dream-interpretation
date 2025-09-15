@@ -3,6 +3,14 @@ const path = require('path');
 
 class Database {
   constructor() {
+    // Railway PostgreSQL 설정 상태 확인
+    if (process.env.DATABASE_URL) {
+      console.log('🔍 DATABASE_URL found - Railway PostgreSQL is configured');
+      console.log('📊 Currently using SQLite for stability');
+    } else {
+      console.log('📝 DATABASE_URL not found - Railway PostgreSQL not configured');
+    }
+
     this.db = new sqlite3.Database(path.join(__dirname, '../database.db'));
     
     // UTF-8 인코딩 강제 설정
