@@ -14,7 +14,9 @@ const SharedPosts = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await postAPI.getSharedPosts();
+      // 캐시 무력화를 위한 타임스탬프 추가
+      const timestamp = new Date().getTime();
+      const response = await postAPI.getSharedPosts(`?t=${timestamp}`);
       setPosts(response.data.posts || []);
     } catch (error) {
       console.error('Error fetching posts:', error);
