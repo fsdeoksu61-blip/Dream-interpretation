@@ -320,6 +320,45 @@ class Database {
     }
   }
 
+  createSession(sessionId, callback) {
+    console.log('🔄 Creating session:', sessionId);
+
+    if (this.pool) {
+      // PostgreSQL
+      this.pool.query(
+        'INSERT INTO sessions (id, expires_at) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING',
+        [sessionId, new Date(Date.now() + 24 * 60 * 60 * 1000)], // 24 hours from now
+        (err) => {
+          if (err) {
+            console.error('❌ PostgreSQL session insert error:', err);
+            callback(err);
+          } else {
+            console.log('✅ PostgreSQL session created');
+            callback(null);
+          }
+        }
+      );
+    } else if (this.db) {
+      // SQLite
+      this.db.run(
+        'INSERT OR IGNORE INTO sessions (id, expires_at) VALUES (?, ?)',
+        [sessionId, new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()],
+        (err) => {
+          if (err) {
+            console.error('❌ SQLite session insert error:', err);
+            callback(err);
+          } else {
+            console.log('✅ SQLite session created');
+            callback(null);
+          }
+        }
+      );
+    } else {
+      console.error('❌ No database connection available for session');
+      callback(new Error('데이터베이스 연결이 없습니다.'));
+    }
+  }
+
   getUserInterpretations(userId, sessionId, callback) {
     if (this.pool) {
       // PostgreSQL
