@@ -2,10 +2,12 @@ import axios from 'axios';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5009';
 
+console.log('🌐 API Base URL:', API_BASE_URL);
+
 // Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 60000, // 60초로 증가 (OpenAI API 응답 시간 고려)
 });
 
 // Request interceptor to add session ID
