@@ -318,4 +318,56 @@ router.post('/change-password', authenticateToken, async (req, res) => {
   }
 });
 
+// Make user admin (temporary endpoint for setup)
+router.post('/make-admin', async (req, res) => {
+  try {
+    const { email, secretKey } = req.body;
+
+    // Secret key for security (you can change this)
+    if (secretKey !== 'ADMIN_SETUP_SECRET_2024') {
+      return res.status(403).json({ error: '권한이 없습니다.' });
+    }
+
+    if (!email) {
+      return res.status(400).json({ error: '이메일을 입력해주세요.' });
+    }
+
+    // Find user and make admin
+    db.getUserByEmail(email, (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: '서버 오류가 발생했습니다.' });
+      }
+
+      if (!user) {
+        return res.status(404).json({ error: '사용자를 찾을 수 없습니다.' });
+      }
+
+      if (user.is_admin) {
+        return res.status(400).json({ error: '이미 관리자입니다.' });
+      }
+
+      // Update user to admin
+      db.db.run(
+        'UPDATE users SET is_admin = TRUE WHERE email = ?',
+        [email],
+        function(err) {
+          if (err) {
+            console.error('Error making user admin:', err);
+            return res.status(500).json({ error: '관리자 권한 부여 중 오류가 발생했습니다.' });
+          }
+
+          if (this.changes === 0) {
+            return res.status(400).json({ error: '관리자 권한 부여에 실패했습니다.' });
+          }
+
+          res.json({ message: '관리자 권한이 성공적으로 부여되었습니다.' });
+        }
+      );
+    });
+  } catch (error) {
+    console.error('Make admin error:', error);
+    res.status(500).json({ error: '서버 오류가 발생했습니다.' });
+  }
+});
+
 module.exports = router;
