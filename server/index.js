@@ -13,25 +13,9 @@ app.set('trust proxy', 1);
 
 // Middleware
 app.use(helmet());
+// 임시로 모든 도메인 허용 (디버깅용)
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-
-    const allowedDomains = [
-      'koreandreamai.com',
-      'dreamai.co.kr',
-      'vercel.app',
-      'localhost'
-    ];
-
-    const isAllowed = allowedDomains.some(domain =>
-      origin.includes(domain)
-    );
-
-    console.log('🌐 CORS check - Origin:', origin, 'Allowed:', isAllowed);
-    callback(null, isAllowed);
-  },
+  origin: true,
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -62,6 +46,12 @@ const limiter = rateLimit({
   max: 100 // limit each IP to 100 requests per windowMs
 });
 app.use(limiter);
+
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`📨 ${req.method} ${req.url} - Origin: ${req.headers.origin || 'None'}`);
+  next();
+});
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
