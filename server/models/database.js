@@ -862,6 +862,45 @@ class Database {
       callback(new Error('데이터베이스 연결이 없습니다.'));
     }
   }
+
+  migrateGuestData(sessionId, userId, callback) {
+    console.log('🔄 Migrating guest data from session to user:', { sessionId, userId });
+
+    if (this.pool) {
+      // PostgreSQL
+      this.pool.query(
+        'UPDATE dream_interpretations SET user_id = $1, session_id = NULL WHERE session_id = $2',
+        [userId, sessionId],
+        (err, result) => {
+          if (err) {
+            console.error('❌ PostgreSQL migrateGuestData error:', err);
+            callback(err);
+          } else {
+            console.log('✅ PostgreSQL migrateGuestData success:', result.rowCount);
+            callback(null);
+          }
+        }
+      );
+    } else if (this.db) {
+      // SQLite
+      this.db.run(
+        'UPDATE dream_interpretations SET user_id = ?, session_id = NULL WHERE session_id = ?',
+        [userId, sessionId],
+        (err) => {
+          if (err) {
+            console.error('❌ SQLite migrateGuestData error:', err);
+            callback(err);
+          } else {
+            console.log('✅ SQLite migrateGuestData success');
+            callback(null);
+          }
+        }
+      );
+    } else {
+      console.error('❌ No database connection for migrateGuestData');
+      callback(new Error('데이터베이스 연결이 없습니다.'));
+    }
+  }
 }
 
 module.exports = new Database();
