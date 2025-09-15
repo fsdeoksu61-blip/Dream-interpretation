@@ -52,6 +52,15 @@ const Navigation = () => {
             <Link to="/" className="nav-link">홈</Link>
             <Link to="/dream/new" className="nav-link">꿈 해석</Link>
             <Link to="/my-dreams" className="nav-link">꿈 해석 둘러보기</Link>
+            {isAuthenticated && (
+              <Link to="/dream-diary" className="nav-link">
+                내 꿈 일기장
+              </Link>
+            )}
+            {/* 디버깅용 - 항상 표시 */}
+            <Link to="/dream-diary" className="nav-link" style={{color: 'red'}}>
+              [테스트] 꿈일기
+            </Link>
             <Link to="/qna" className="nav-link">Q&A</Link>
           </div>
           
