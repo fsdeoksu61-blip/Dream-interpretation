@@ -14,14 +14,10 @@ const SharedPosts = () => {
 
   const fetchPosts = async () => {
     try {
-      console.log('🔄 공유 게시물 조회 시작...');
       const response = await postAPI.getSharedPosts();
-      console.log('✅ API 응답 성공:', response.data);
-      console.log('📋 게시물 개수:', response.data.posts?.length || 0);
       setPosts(response.data.posts || []);
     } catch (error) {
-      console.error('❌ 게시물 조회 실패:', error);
-      console.error('❌ 오류 상세:', error.response?.data || error.message);
+      console.error('Error fetching posts:', error);
       setError('게시물을 불러오는 중 오류가 발생했습니다.');
     } finally {
       setLoading(false);
