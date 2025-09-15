@@ -548,19 +548,24 @@ class Database {
   }
 
   getSharedPosts(callback) {
-    const query = `
-      SELECT sp.*, di.dream_content, di.interpretation, di.created_at as interpretation_date,
-             u.username as author_username, di.session_id, di.user_id
-      FROM shared_posts sp
-      JOIN dream_interpretations di ON sp.interpretation_id = di.id
-      LEFT JOIN users u ON di.user_id = u.id
-      ORDER BY sp.created_at DESC
-    `;
+    console.log('🔄 Getting shared posts for admin');
 
     if (this.pool) {
-      // PostgreSQL
+      // PostgreSQL - shared_posts 테이블 사용
+      const query = `
+        SELECT sp.*, di.dream_content, di.interpretation, di.created_at as interpretation_date,
+               u.username as author_username, di.session_id, di.user_id
+        FROM shared_posts sp
+        JOIN dream_interpretations di ON sp.interpretation_id = di.id
+        LEFT JOIN users u ON di.user_id = u.id
+        ORDER BY sp.created_at DESC
+      `;
+
       this.pool.query(query, (err, result) => {
-        if (err) return callback(err);
+        if (err) {
+          console.error('❌ PostgreSQL getSharedPosts error:', err);
+          return callback(err);
+        }
 
         const processedPosts = result.rows.map(post => {
           if (!post.author_username && post.session_id) {
@@ -570,12 +575,25 @@ class Database {
           return post;
         });
 
+        console.log('✅ PostgreSQL getSharedPosts success:', processedPosts.length);
         callback(null, processedPosts);
       });
-    } else {
-      // SQLite
+    } else if (this.db) {
+      // SQLite - posts 테이블 사용
+      const query = `
+        SELECT p.*, di.dream_content, di.interpretation, di.created_at as interpretation_date,
+               u.username as author_username, di.session_id, di.user_id
+        FROM posts p
+        JOIN dream_interpretations di ON p.interpretation_id = di.id
+        LEFT JOIN users u ON di.user_id = u.id
+        ORDER BY p.created_at DESC
+      `;
+
       this.db.all(query, (err, posts) => {
-        if (err) return callback(err);
+        if (err) {
+          console.error('❌ SQLite getSharedPosts error:', err);
+          return callback(err);
+        }
 
         const processedPosts = posts.map(post => {
           if (!post.author_username && post.session_id) {
@@ -585,8 +603,12 @@ class Database {
           return post;
         });
 
+        console.log('✅ SQLite getSharedPosts success:', processedPosts.length);
         callback(null, processedPosts);
       });
+    } else {
+      console.error('❌ No database connection for getSharedPosts');
+      callback(new Error('데이터베이스 연결이 없습니다.'));
     }
   }
 
