@@ -14,14 +14,24 @@ app.set('trust proxy', 1);
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: [
-    'https://www.koreandreamai.com',
-    'https://koreandreamai.com',
-    'https://www.dreamai.co.kr',
-    'https://dreamai.co.kr',
-    'http://localhost:3000',
-    'http://localhost:3002'
-  ],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    const allowedDomains = [
+      'koreandreamai.com',
+      'dreamai.co.kr',
+      'vercel.app',
+      'localhost'
+    ];
+
+    const isAllowed = allowedDomains.some(domain =>
+      origin.includes(domain)
+    );
+
+    console.log('🌐 CORS check - Origin:', origin, 'Allowed:', isAllowed);
+    callback(null, isAllowed);
+  },
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
