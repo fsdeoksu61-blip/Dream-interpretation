@@ -10,14 +10,24 @@ const SharedPosts = () => {
 
   useEffect(() => {
     fetchPosts();
+
+    // 페이지가 포커스될 때마다 새로 불러오기
+    const handleFocus = () => {
+      fetchPosts();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
   }, []);
 
   const fetchPosts = async () => {
     try {
+      setLoading(true);
       // 캐시 무력화를 위한 타임스탬프 추가
       const timestamp = new Date().getTime();
-      const response = await postAPI.getSharedPosts(`?t=${timestamp}`);
+      const response = await postAPI.getSharedPosts(`?t=${timestamp}&_cache=${Math.random()}`);
       setPosts(response.data.posts || []);
+      console.log('📱 Fetched posts:', response.data.posts?.length || 0);
     } catch (error) {
       console.error('Error fetching posts:', error);
       setError('게시물을 불러오는 중 오류가 발생했습니다.');
@@ -55,8 +65,20 @@ const SharedPosts = () => {
     <div className="shared-posts">
       <div className="container">
         <div className="page-header">
-          <h1>💫 꿈 공유 게시판</h1>
-          <p>다른 사람들이 공유한 꿈 해석을 살펴보고, 함께 이야기해보세요</p>
+          <div className="header-content">
+            <div>
+              <h1>💫 꿈 공유 게시판</h1>
+              <p>다른 사람들이 공유한 꿈 해석을 살펴보고, 함께 이야기해보세요</p>
+            </div>
+            <button
+              className="refresh-btn"
+              onClick={() => fetchPosts()}
+              disabled={loading}
+              title="목록 새로고침"
+            >
+              🔄
+            </button>
+          </div>
         </div>
 
         {error && (
