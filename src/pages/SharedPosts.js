@@ -14,8 +14,10 @@ const SharedPosts = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await postAPI.getSharedPosts();
-      setPosts(response.data.posts);
+      // 캐시 무력화를 위한 타임스탬프 추가
+      const timestamp = new Date().getTime();
+      const response = await postAPI.getSharedPosts(`?t=${timestamp}`);
+      setPosts(response.data.posts || []);
     } catch (error) {
       console.error('Error fetching posts:', error);
       setError('게시물을 불러오는 중 오류가 발생했습니다.');

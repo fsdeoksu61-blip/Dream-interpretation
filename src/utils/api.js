@@ -64,7 +64,7 @@ export const dreamAPI = {
 };
 
 export const postAPI = {
-  getSharedPosts: () => api.get('/api/posts'),
+  getSharedPosts: (params = '') => api.get(`/api/posts${params}`),
   getPost: (id) => api.get(`/api/posts/${id}`),
   addComment: (postId, content, username = null) => api.post(`/api/posts/${postId}/comments`, { content, username }),
   toggleLike: (postId) => api.post(`/api/posts/${postId}/like`),
