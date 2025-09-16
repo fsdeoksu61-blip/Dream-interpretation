@@ -1178,6 +1178,46 @@ class Database {
       callback(new Error('데이터베이스 연결이 없습니다.'));
     }
   }
+
+  // 사용자 비밀번호 업데이트 메서드
+  updateUserPassword(email, hashedPassword, callback) {
+    console.log('🔄 Updating user password for:', email);
+
+    if (this.pool) {
+      // PostgreSQL
+      this.pool.query(
+        'UPDATE users SET password = $1 WHERE email = $2',
+        [hashedPassword, email],
+        (err, result) => {
+          if (err) {
+            console.error('❌ PostgreSQL updateUserPassword error:', err);
+            callback(err);
+          } else {
+            console.log('✅ PostgreSQL updateUserPassword success:', result.rowCount);
+            callback(null, result.rowCount);
+          }
+        }
+      );
+    } else if (this.db) {
+      // SQLite
+      this.db.run(
+        'UPDATE users SET password = ? WHERE email = ?',
+        [hashedPassword, email],
+        function(err) {
+          if (err) {
+            console.error('❌ SQLite updateUserPassword error:', err);
+            callback(err);
+          } else {
+            console.log('✅ SQLite updateUserPassword success:', this.changes);
+            callback(null, this.changes);
+          }
+        }
+      );
+    } else {
+      console.error('❌ No database connection for updateUserPassword');
+      callback(new Error('데이터베이스 연결이 없습니다.'));
+    }
+  }
 }
 
 module.exports = new Database();

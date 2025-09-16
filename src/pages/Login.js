@@ -83,29 +83,7 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="auth-form">
             {error && (
               <div className="error-message global-error">
-                <div style={{ marginBottom: '10px' }}>
-                  {error}
-                </div>
-                {error.includes('비밀번호') && (
-                  <div>
-                    <Link
-                      to="/forgot-password"
-                      className="error-action-button"
-                      style={{
-                        display: 'inline-block',
-                        padding: '8px 16px',
-                        backgroundColor: '#28a745',
-                        color: 'white',
-                        textDecoration: 'none',
-                        borderRadius: '4px',
-                        fontSize: '0.9rem',
-                        fontWeight: 'bold'
-                      }}
-                    >
-                      비밀번호 찾기
-                    </Link>
-                  </div>
-                )}
+                {error}
               </div>
             )}
 
