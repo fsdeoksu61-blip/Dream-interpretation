@@ -578,14 +578,14 @@ class Database {
         callback(null, processedPosts);
       });
     } else if (this.db) {
-      // SQLite - posts 테이블 사용
+      // SQLite - shared_posts 테이블 사용 (PostgreSQL과 동일하게)
       const query = `
-        SELECT p.*, di.dream_content, di.interpretation, di.created_at as interpretation_date,
+        SELECT sp.*, di.dream_content, di.interpretation, di.created_at as interpretation_date,
                u.username as author_username, di.session_id, di.user_id
-        FROM posts p
-        JOIN dream_interpretations di ON p.interpretation_id = di.id
+        FROM shared_posts sp
+        JOIN dream_interpretations di ON sp.interpretation_id = di.id
         LEFT JOIN users u ON di.user_id = u.id
-        ORDER BY p.created_at DESC
+        ORDER BY sp.created_at DESC
       `;
 
       this.db.all(query, (err, posts) => {
