@@ -10,6 +10,7 @@ import DreamInput from './pages/DreamInput';
 import DreamResult from './pages/DreamResult';
 import MyDreams from './pages/MyDreams';
 import SharedPosts from './pages/SharedPosts';
+import PostDetail from './pages/PostDetail';
 import DreamDiary from './pages/DreamDiary';
 import QnA from './pages/QnA';
 import QnAWrite from './pages/QnAWrite';
@@ -41,6 +42,7 @@ function App() {
                     <Route path="/dream/:id" element={<DreamResult />} />
                     <Route path="/my-dreams" element={<MyDreams />} />
                     <Route path="/shared-posts" element={<SharedPosts />} />
+                    <Route path="/post/:id" element={<PostDetail />} />
                     <Route path="/dream-diary" element={<DreamDiary />} />
                     <Route path="/qna" element={<QnA />} />
                     <Route path="/qna/write" element={<QnAWrite />} />

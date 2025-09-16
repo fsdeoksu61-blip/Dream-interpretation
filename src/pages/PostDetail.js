@@ -85,7 +85,7 @@ const PostDetail = () => {
             <div className="error-icon">😔</div>
             <h2>{error}</h2>
             <div className="error-actions">
-              <Link to="/shared" className="btn-primary">
+              <Link to="/shared-posts" className="btn-primary">
                 목록으로 돌아가기
               </Link>
             </div>
@@ -103,7 +103,7 @@ const PostDetail = () => {
             <div className="error-icon">🔍</div>
             <h2>게시물을 찾을 수 없습니다</h2>
             <div className="error-actions">
-              <Link to="/shared" className="btn-primary">
+              <Link to="/shared-posts" className="btn-primary">
                 목록으로 돌아가기
               </Link>
             </div>
@@ -120,7 +120,7 @@ const PostDetail = () => {
           <button onClick={() => navigate(-1)} className="back-btn">
             ← 뒤로가기
           </button>
-          <Link to="/shared" className="list-btn">
+          <Link to="/shared-posts" className="list-btn">
             목록으로
           </Link>
         </div>
@@ -172,7 +172,7 @@ const PostDetail = () => {
             >
               {liked ? '❤️ 좋아요 취소' : '🤍 좋아요'}
             </button>
-            <Link to="/shared" className="action-btn secondary">
+            <Link to="/shared-posts" className="action-btn secondary">
               다른 꿈 보기
             </Link>
           </div>
