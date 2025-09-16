@@ -72,7 +72,7 @@ const QnAWrite = () => {
       
       // 새 질문 생성
       const newQuestion = {
-        id: Date.now(), // 간단한 ID 생성
+        id: Date.now() + Math.random(), // 고유 ID 생성
         title: formData.title.trim(),
         category: formData.category,
         content: formData.content.trim(),
