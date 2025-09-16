@@ -89,10 +89,10 @@ const MyDreams = () => {
     <div className="my-dreams">
       <div className="container">
         <div className="page-header">
-          <h1>🔍 꿈 해석 둘러보기</h1>
+          <h1>📚 내 꿈 해석 기록</h1>
           <p>
-            {isAuthenticated 
-              ? '지금까지 해석한 모든 꿈을 확인해보세요. 새로운 꿈을 해석하거나 과거의 기록을 다시 살펴보세요'
+            {isAuthenticated
+              ? '지금까지 해석한 나의 모든 꿈을 확인해보세요. 새로운 꿈을 해석하거나 과거의 기록을 다시 살펴보세요'
               : '회원가입하시면 모든 기록이 영구 보관됩니다. 새로운 꿈을 해석하거나 과거의 기록을 다시 살펴보세요'
             }
           </p>

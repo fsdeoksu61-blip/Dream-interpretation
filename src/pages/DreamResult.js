@@ -208,9 +208,9 @@ const DreamResult = () => {
               새로운 꿈 해석하기
             </button>
             
-            <button 
+            <button
               className="btn-secondary"
-              onClick={() => navigate('/my-dreams')}
+              onClick={() => navigate('/shared-posts')}
             >
               꿈 해석 둘러보기
             </button>
