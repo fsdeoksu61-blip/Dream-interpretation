@@ -19,7 +19,12 @@ const QnADetail = () => {
   const loadQuestion = () => {
     try {
       const questions = JSON.parse(localStorage.getItem('qna-questions') || '[]');
-      const foundQuestion = questions.find(q => q.id === parseInt(id));
+      // ID를 문자열과 숫자 모두로 비교하여 더 안전하게 처리
+      const foundQuestion = questions.find(q =>
+        q.id === parseInt(id) ||
+        q.id === parseFloat(id) ||
+        q.id.toString() === id.toString()
+      );
       
       if (!foundQuestion) {
         setError('질문을 찾을 수 없습니다.');
@@ -28,8 +33,8 @@ const QnADetail = () => {
       }
 
       // 조회수 증가 (안전하게 처리)
-      const updatedQuestions = questions.map(q => 
-        q.id === parseInt(id) 
+      const updatedQuestions = questions.map(q =>
+        (q.id === parseInt(id) || q.id === parseFloat(id) || q.id.toString() === id.toString())
           ? { ...q, views: (q.views || 0) + 1 }
           : q
       );
@@ -82,8 +87,8 @@ const QnADetail = () => {
 
     try {
       const questions = JSON.parse(localStorage.getItem('qna-questions') || '[]');
-      const updatedQuestions = questions.map(q => 
-        q.id === parseInt(id)
+      const updatedQuestions = questions.map(q =>
+        (q.id === parseInt(id) || q.id === parseFloat(id) || q.id.toString() === id.toString())
           ? {
               ...q,
               answered: true,
@@ -110,8 +115,8 @@ const QnADetail = () => {
 
     try {
       const questions = JSON.parse(localStorage.getItem('qna-questions') || '[]');
-      const updatedQuestions = questions.map(q => 
-        q.id === parseInt(id)
+      const updatedQuestions = questions.map(q =>
+        (q.id === parseInt(id) || q.id === parseFloat(id) || q.id.toString() === id.toString())
           ? {
               ...q,
               answered: false,
