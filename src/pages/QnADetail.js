@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { qnaAPI } from '../utils/api';
 import './QnADetail.css';
 
 const QnADetail = () => {
@@ -16,35 +17,62 @@ const QnADetail = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  const loadQuestion = () => {
+  const loadQuestion = async () => {
     try {
+      setLoading(true);
+
+      // 먼저 서버에서 질문을 가져오기 시도
+      try {
+        const response = await qnaAPI.getQuestion(id);
+        const serverQuestion = response.data.question;
+
+        if (serverQuestion) {
+          // 날짜 필드명 통일
+          const normalizedQuestion = {
+            ...serverQuestion,
+            date: serverQuestion.created_at,
+            answerDate: serverQuestion.answer_date
+          };
+          setQuestion(normalizedQuestion);
+          console.log('✅ 서버에서 Q&A 질문 로드:', id);
+          return;
+        }
+      } catch (serverError) {
+        console.log('서버에서 Q&A 질문을 불러올 수 없음, localStorage 사용:', serverError.message);
+      }
+
+      // 서버에서 찾을 수 없으면 localStorage fallback
       const questions = JSON.parse(localStorage.getItem('qna-questions') || '[]');
-      // ID를 문자열과 숫자 모두로 비교하여 더 안전하게 처리
       const foundQuestion = questions.find(q =>
         q.id === parseInt(id) ||
         q.id === parseFloat(id) ||
         q.id.toString() === id.toString()
       );
-      
+
       if (!foundQuestion) {
         setError('질문을 찾을 수 없습니다.');
-        setLoading(false);
         return;
       }
 
-      // 조회수 증가 (안전하게 처리)
+      // localStorage의 경우 조회수 증가
       const updatedQuestions = questions.map(q =>
         (q.id === parseInt(id) || q.id === parseFloat(id) || q.id.toString() === id.toString())
           ? { ...q, views: (q.views || 0) + 1 }
           : q
       );
       localStorage.setItem('qna-questions', JSON.stringify(updatedQuestions));
-      
-      setQuestion({ ...foundQuestion, views: (foundQuestion.views || 0) + 1 });
-      setLoading(false);
+
+      setQuestion({
+        ...foundQuestion,
+        views: (foundQuestion.views || 0) + 1,
+        source: 'localStorage'
+      });
+      console.log('✅ localStorage에서 Q&A 질문 로드:', id);
+
     } catch (err) {
       console.error('질문 로드 실패:', err);
       setError('질문을 불러오는 중 오류가 발생했습니다.');
+    } finally {
       setLoading(false);
     }
   };
@@ -77,7 +105,7 @@ const QnADetail = () => {
     }
   };
 
-  const handleAnswerSubmit = () => {
+  const handleAnswerSubmit = async () => {
     if (!adminAnswer.trim()) {
       alert('답변 내용을 입력해주세요.');
       return;
@@ -86,6 +114,21 @@ const QnADetail = () => {
     setIsSubmittingAnswer(true);
 
     try {
+      // 서버 질문인 경우 서버 API 사용
+      if (question.source !== 'localStorage') {
+        try {
+          await qnaAPI.answerQuestion(id, adminAnswer.trim(), 'dream2024');
+          alert('답변이 성공적으로 등록되었습니다.');
+          window.location.reload();
+          return;
+        } catch (serverError) {
+          console.error('서버 답변 등록 실패:', serverError);
+          alert('서버 답변 등록 중 오류가 발생했습니다.');
+          return;
+        }
+      }
+
+      // localStorage 질문인 경우 localStorage 처리
       const questions = JSON.parse(localStorage.getItem('qna-questions') || '[]');
       const updatedQuestions = questions.map(q =>
         (q.id === parseInt(id) || q.id === parseFloat(id) || q.id.toString() === id.toString())
@@ -97,11 +140,11 @@ const QnADetail = () => {
             }
           : q
       );
-      
+
       localStorage.setItem('qna-questions', JSON.stringify(updatedQuestions));
-      
-      // 페이지 새로고침
+      alert('답변이 성공적으로 등록되었습니다. (로컬 저장)');
       window.location.reload();
+
     } catch (err) {
       console.error('답변 저장 실패:', err);
       alert('답변 저장 중 오류가 발생했습니다.');
@@ -110,10 +153,25 @@ const QnADetail = () => {
     }
   };
 
-  const handleDeleteAnswer = () => {
+  const handleDeleteAnswer = async () => {
     if (!window.confirm('답변을 삭제하시겠습니까?')) return;
 
     try {
+      // 서버 질문인 경우 서버 API 사용
+      if (question.source !== 'localStorage') {
+        try {
+          await qnaAPI.deleteAnswer(id, 'dream2024');
+          alert('답변이 성공적으로 삭제되었습니다.');
+          window.location.reload();
+          return;
+        } catch (serverError) {
+          console.error('서버 답변 삭제 실패:', serverError);
+          alert('서버 답변 삭제 중 오류가 발생했습니다.');
+          return;
+        }
+      }
+
+      // localStorage 질문인 경우 localStorage 처리
       const questions = JSON.parse(localStorage.getItem('qna-questions') || '[]');
       const updatedQuestions = questions.map(q =>
         (q.id === parseInt(id) || q.id === parseFloat(id) || q.id.toString() === id.toString())
@@ -125,9 +183,11 @@ const QnADetail = () => {
             }
           : q
       );
-      
+
       localStorage.setItem('qna-questions', JSON.stringify(updatedQuestions));
+      alert('답변이 성공적으로 삭제되었습니다. (로컬 저장)');
       window.location.reload();
+
     } catch (err) {
       console.error('답변 삭제 실패:', err);
       alert('답변 삭제 중 오류가 발생했습니다.');

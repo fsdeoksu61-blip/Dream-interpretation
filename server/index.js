@@ -59,6 +59,7 @@ app.use('/api/dreams', require('./routes/dreams'));
 app.use('/api/posts', require('./routes/posts'));
 app.use('/api/community', require('./routes/community'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/qna', require('./routes/qna'));
 
 // Health check
 app.get('/api/health', (req, res) => {

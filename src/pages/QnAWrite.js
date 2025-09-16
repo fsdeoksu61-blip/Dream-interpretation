@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { qnaAPI } from '../utils/api';
 import './QnAWrite.css';
 
 const QnAWrite = () => {
@@ -57,7 +58,7 @@ const QnAWrite = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -67,33 +68,53 @@ const QnAWrite = () => {
     setIsSubmitting(true);
 
     try {
-      // localStorage에서 기존 질문들 가져오기
+      // 먼저 서버에 질문 등록 시도
+      try {
+        const questionData = {
+          title: formData.title.trim(),
+          category: formData.category,
+          content: formData.content.trim(),
+          author: formData.author?.trim() || '익명'
+        };
+
+        const response = await qnaAPI.createQuestion(questionData);
+        console.log('✅ 서버에 Q&A 질문 등록 성공:', response.data);
+
+        alert('질문이 성공적으로 등록되었습니다! 답변을 기다려주세요.');
+        navigate('/qna');
+        return;
+
+      } catch (serverError) {
+        console.log('서버 등록 실패, localStorage에 저장:', serverError.message);
+      }
+
+      // 서버 등록이 실패하면 localStorage에 fallback 저장
       const existingQuestions = JSON.parse(localStorage.getItem('qna-questions') || '[]');
-      
+
       // 새 질문 생성
       const newQuestion = {
-        id: Date.now() + Math.floor(Math.random() * 1000), // 고유 정수 ID 생성
+        id: Date.now() + Math.floor(Math.random() * 1000),
         title: formData.title.trim(),
         category: formData.category,
         content: formData.content.trim(),
-        author: formData.author,
+        author: formData.author?.trim() || '익명',
         date: new Date().toISOString(),
         views: 0,
         answered: false,
         answer: null,
-        answerDate: null
+        answerDate: null,
+        source: 'localStorage'
       };
-      
+
       // 새 질문을 맨 앞에 추가
       const updatedQuestions = [newQuestion, ...existingQuestions];
-      
+
       // localStorage에 저장
       localStorage.setItem('qna-questions', JSON.stringify(updatedQuestions));
-      
-      // 성공 메시지 표시 후 Q&A 페이지로 이동
-      alert('질문이 성공적으로 등록되었습니다! 답변을 기다려주세요.');
+
+      alert('질문이 성공적으로 등록되었습니다! (로컬 저장) 답변을 기다려주세요.');
       navigate('/qna');
-      
+
     } catch (error) {
       console.error('질문 등록 실패:', error);
       alert('질문 등록 중 오류가 발생했습니다. 다시 시도해주세요.');

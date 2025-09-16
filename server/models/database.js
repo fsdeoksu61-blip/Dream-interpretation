@@ -109,6 +109,24 @@ class Database {
         )
       `);
 
+      // Q&A 테이블
+      await client.query(`
+        CREATE TABLE IF NOT EXISTS qna_questions (
+          id SERIAL PRIMARY KEY,
+          title VARCHAR(200) NOT NULL,
+          category VARCHAR(50) DEFAULT '일반',
+          content TEXT NOT NULL,
+          author VARCHAR(50) DEFAULT '익명',
+          user_id INTEGER REFERENCES users(id),
+          session_id VARCHAR(255) REFERENCES sessions(id),
+          views INTEGER DEFAULT 0,
+          answered BOOLEAN DEFAULT FALSE,
+          answer TEXT,
+          answer_date TIMESTAMP,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+
       console.log('✅ PostgreSQL 테이블 생성 완료');
       await this.createDefaultAdmin();
 
@@ -252,6 +270,25 @@ class Database {
           content TEXT NOT NULL,
           views INTEGER DEFAULT 0,
           likes INTEGER DEFAULT 0,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users (id)
+        )
+      `);
+
+      // Q&A table
+      this.db.run(`
+        CREATE TABLE IF NOT EXISTS qna_questions (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          category TEXT DEFAULT '일반',
+          content TEXT NOT NULL,
+          author TEXT DEFAULT '익명',
+          user_id INTEGER,
+          session_id TEXT,
+          views INTEGER DEFAULT 0,
+          answered BOOLEAN DEFAULT FALSE,
+          answer TEXT,
+          answer_date DATETIME,
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (user_id) REFERENCES users (id)
         )
@@ -897,6 +934,247 @@ class Database {
       );
     } else {
       console.error('❌ No database connection for migrateGuestData');
+      callback(new Error('데이터베이스 연결이 없습니다.'));
+    }
+  }
+
+  // Q&A 관련 메서드들
+  createQnaQuestion(data, callback) {
+    console.log('🔄 Creating Q&A question:', {
+      title: data.title,
+      category: data.category,
+      author: data.author
+    });
+
+    if (this.pool) {
+      // PostgreSQL
+      this.pool.query(
+        'INSERT INTO qna_questions (title, category, content, author, user_id, session_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
+        [data.title, data.category, data.content, data.author, data.user_id, data.session_id],
+        (err, result) => {
+          if (err) {
+            console.error('❌ PostgreSQL createQnaQuestion error:', err);
+            callback(err);
+          } else {
+            console.log('✅ PostgreSQL createQnaQuestion success:', result.rows[0].id);
+            callback(null, result.rows[0].id);
+          }
+        }
+      );
+    } else if (this.db) {
+      // SQLite
+      this.db.run(
+        'INSERT INTO qna_questions (title, category, content, author, user_id, session_id) VALUES (?, ?, ?, ?, ?, ?)',
+        [data.title, data.category, data.content, data.author, data.user_id, data.session_id],
+        function(err) {
+          if (err) {
+            console.error('❌ SQLite createQnaQuestion error:', err);
+            callback(err);
+          } else {
+            console.log('✅ SQLite createQnaQuestion success:', this.lastID);
+            callback(null, this.lastID);
+          }
+        }
+      );
+    } else {
+      console.error('❌ No database connection for createQnaQuestion');
+      callback(new Error('데이터베이스 연결이 없습니다.'));
+    }
+  }
+
+  getAllQnaQuestions(callback) {
+    console.log('🔄 Getting all Q&A questions');
+
+    if (this.pool) {
+      // PostgreSQL
+      this.pool.query(
+        'SELECT * FROM qna_questions ORDER BY created_at DESC',
+        [],
+        (err, result) => {
+          if (err) {
+            console.error('❌ PostgreSQL getAllQnaQuestions error:', err);
+            callback(err);
+          } else {
+            console.log('✅ PostgreSQL getAllQnaQuestions success:', result.rows.length);
+            callback(null, result.rows);
+          }
+        }
+      );
+    } else if (this.db) {
+      // SQLite
+      this.db.all(
+        'SELECT * FROM qna_questions ORDER BY created_at DESC',
+        [],
+        (err, rows) => {
+          if (err) {
+            console.error('❌ SQLite getAllQnaQuestions error:', err);
+            callback(err);
+          } else {
+            console.log('✅ SQLite getAllQnaQuestions success:', rows.length);
+            callback(null, rows);
+          }
+        }
+      );
+    } else {
+      console.error('❌ No database connection for getAllQnaQuestions');
+      callback(new Error('데이터베이스 연결이 없습니다.'));
+    }
+  }
+
+  getQnaQuestionById(id, callback) {
+    console.log('🔄 Getting Q&A question by ID:', id);
+
+    if (this.pool) {
+      // PostgreSQL
+      this.pool.query(
+        'SELECT * FROM qna_questions WHERE id = $1',
+        [id],
+        (err, result) => {
+          if (err) {
+            console.error('❌ PostgreSQL getQnaQuestionById error:', err);
+            callback(err);
+          } else {
+            console.log('✅ PostgreSQL getQnaQuestionById success');
+            callback(null, result.rows[0]);
+          }
+        }
+      );
+    } else if (this.db) {
+      // SQLite
+      this.db.get(
+        'SELECT * FROM qna_questions WHERE id = ?',
+        [id],
+        (err, row) => {
+          if (err) {
+            console.error('❌ SQLite getQnaQuestionById error:', err);
+            callback(err);
+          } else {
+            console.log('✅ SQLite getQnaQuestionById success');
+            callback(null, row);
+          }
+        }
+      );
+    } else {
+      console.error('❌ No database connection for getQnaQuestionById');
+      callback(new Error('데이터베이스 연결이 없습니다.'));
+    }
+  }
+
+  incrementQnaViews(id, callback) {
+    console.log('🔄 Incrementing Q&A views:', id);
+
+    if (this.pool) {
+      // PostgreSQL
+      this.pool.query(
+        'UPDATE qna_questions SET views = views + 1 WHERE id = $1',
+        [id],
+        (err) => {
+          if (err) {
+            console.error('❌ PostgreSQL incrementQnaViews error:', err);
+            callback(err);
+          } else {
+            console.log('✅ PostgreSQL incrementQnaViews success');
+            callback(null);
+          }
+        }
+      );
+    } else if (this.db) {
+      // SQLite
+      this.db.run(
+        'UPDATE qna_questions SET views = views + 1 WHERE id = ?',
+        [id],
+        (err) => {
+          if (err) {
+            console.error('❌ SQLite incrementQnaViews error:', err);
+            callback(err);
+          } else {
+            console.log('✅ SQLite incrementQnaViews success');
+            callback(null);
+          }
+        }
+      );
+    } else {
+      console.error('❌ No database connection for incrementQnaViews');
+      callback(new Error('데이터베이스 연결이 없습니다.'));
+    }
+  }
+
+  updateQnaAnswer(id, answer, callback) {
+    console.log('🔄 Updating Q&A answer:', id);
+
+    const answerDate = new Date().toISOString();
+
+    if (this.pool) {
+      // PostgreSQL
+      this.pool.query(
+        'UPDATE qna_questions SET answered = TRUE, answer = $1, answer_date = $2 WHERE id = $3',
+        [answer, answerDate, id],
+        (err) => {
+          if (err) {
+            console.error('❌ PostgreSQL updateQnaAnswer error:', err);
+            callback(err);
+          } else {
+            console.log('✅ PostgreSQL updateQnaAnswer success');
+            callback(null);
+          }
+        }
+      );
+    } else if (this.db) {
+      // SQLite
+      this.db.run(
+        'UPDATE qna_questions SET answered = 1, answer = ?, answer_date = ? WHERE id = ?',
+        [answer, answerDate, id],
+        (err) => {
+          if (err) {
+            console.error('❌ SQLite updateQnaAnswer error:', err);
+            callback(err);
+          } else {
+            console.log('✅ SQLite updateQnaAnswer success');
+            callback(null);
+          }
+        }
+      );
+    } else {
+      console.error('❌ No database connection for updateQnaAnswer');
+      callback(new Error('데이터베이스 연결이 없습니다.'));
+    }
+  }
+
+  deleteQnaAnswer(id, callback) {
+    console.log('🔄 Deleting Q&A answer:', id);
+
+    if (this.pool) {
+      // PostgreSQL
+      this.pool.query(
+        'UPDATE qna_questions SET answered = FALSE, answer = NULL, answer_date = NULL WHERE id = $1',
+        [id],
+        (err) => {
+          if (err) {
+            console.error('❌ PostgreSQL deleteQnaAnswer error:', err);
+            callback(err);
+          } else {
+            console.log('✅ PostgreSQL deleteQnaAnswer success');
+            callback(null);
+          }
+        }
+      );
+    } else if (this.db) {
+      // SQLite
+      this.db.run(
+        'UPDATE qna_questions SET answered = 0, answer = NULL, answer_date = NULL WHERE id = ?',
+        [id],
+        (err) => {
+          if (err) {
+            console.error('❌ SQLite deleteQnaAnswer error:', err);
+            callback(err);
+          } else {
+            console.log('✅ SQLite deleteQnaAnswer success');
+            callback(null);
+          }
+        }
+      );
+    } else {
+      console.error('❌ No database connection for deleteQnaAnswer');
       callback(new Error('데이터베이스 연결이 없습니다.'));
     }
   }

@@ -100,4 +100,12 @@ export const adminAPI = {
   deleteInterpretation: (id) => api.delete(`/api/admin/interpretations/${id}`),
 };
 
+export const qnaAPI = {
+  getQuestions: (params = '') => api.get(`/api/qna${params}`),
+  getQuestion: (id) => api.get(`/api/qna/${id}`),
+  createQuestion: (data) => api.post('/api/qna', data),
+  answerQuestion: (id, answer, adminPassword) => api.post(`/api/qna/${id}/answer`, { answer, adminPassword }),
+  deleteAnswer: (id, adminPassword) => api.delete(`/api/qna/${id}/answer`, { data: { adminPassword } }),
+};
+
 export default api;

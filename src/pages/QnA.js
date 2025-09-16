@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { qnaAPI } from '../utils/api';
 import './QnA.css';
 
 const QnA = () => {
@@ -20,12 +21,37 @@ const QnA = () => {
     return () => window.removeEventListener('focus', handleFocus);
   }, []);
 
-  const loadQuestions = () => {
+  const loadQuestions = async () => {
     try {
+      setLoading(true);
+
+      // 먼저 서버에서 질문들을 가져오기 시도
+      try {
+        const timestamp = new Date().getTime();
+        const response = await qnaAPI.getQuestions(`?t=${timestamp}&_cache=${Math.random()}`);
+        const serverQuestions = response.data.questions || [];
+
+        if (serverQuestions.length > 0) {
+          // 서버에서 데이터를 받았으면 날짜 필드명 통일
+          const normalizedQuestions = serverQuestions.map(q => ({
+            ...q,
+            date: q.created_at,
+            answerDate: q.answer_date
+          }));
+          setQuestions(normalizedQuestions);
+          console.log('✅ 서버에서 Q&A 질문 로드:', normalizedQuestions.length);
+          return;
+        }
+      } catch (serverError) {
+        console.log('서버에서 Q&A 데이터를 불러올 수 없음, localStorage 사용:', serverError.message);
+      }
+
+      // 서버에서 데이터가 없으면 localStorage fallback
       const savedQuestions = localStorage.getItem('qna-questions');
       if (savedQuestions) {
         const parsed = JSON.parse(savedQuestions);
         setQuestions(parsed);
+        console.log('✅ localStorage에서 Q&A 질문 로드:', parsed.length);
       } else {
         // 예시 질문들로 시작
         const sampleQuestions = [
@@ -56,6 +82,7 @@ const QnA = () => {
         ];
         setQuestions(sampleQuestions);
         localStorage.setItem('qna-questions', JSON.stringify(sampleQuestions));
+        console.log('✅ 샘플 Q&A 질문 로드');
       }
     } catch (error) {
       console.error('Q&A 데이터 로드 실패:', error);
@@ -193,7 +220,7 @@ const QnA = () => {
         {filteredQuestions.length > 0 && (
           <div className="qna-footer">
             <p className="tip">
-              💡 <strong>팁:</strong> 구체적인 꿈의 상황을 자세히 적어주시면 더 정확한 해석을 받을 수 있어요!
+              *본 Q&A 게시판은 개발 종료 시점까지 이용자와의 의사소통을 위해 한시적으로 운영합니다.*
             </p>
           </div>
         )}
