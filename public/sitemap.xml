@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://dream-interpretation-production.up.railway.app/</loc>
+    <loc>https://dreamai.co.kr/</loc>
     <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://dream-interpretation-production.up.railway.app/dream/new</loc>
+    <loc>https://dreamai.co.kr/dream/new</loc>
     <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dream-interpretation-production.up.railway.app/my-dreams</loc>
+    <loc>https://dreamai.co.kr/my-dreams</loc>
     <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dream-interpretation-production.up.railway.app/shared-posts</loc>
+    <loc>https://dreamai.co.kr/shared-posts</loc>
     <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dream-interpretation-production.up.railway.app/dream-diary</loc>
+    <loc>https://dreamai.co.kr/dream-diary</loc>
     <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dream-interpretation-production.up.railway.app/qna</loc>
+    <loc>https://dreamai.co.kr/qna</loc>
     <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dream-interpretation-production.up.railway.app/qna/write</loc>
+    <loc>https://dreamai.co.kr/qna/write</loc>
     <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://dream-interpretation-production.up.railway.app/login</loc>
+    <loc>https://dreamai.co.kr/login</loc>
     <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://dream-interpretation-production.up.railway.app/register</loc>
+    <loc>https://dreamai.co.kr/register</loc>
     <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://dream-interpretation-production.up.railway.app/forgot-password</loc>
+    <loc>https://dreamai.co.kr/forgot-password</loc>
     <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://dream-interpretation-production.up.railway.app/privacy-policy</loc>
+    <loc>https://dreamai.co.kr/privacy-policy</loc>
     <lastmod>2024-12-19T00:00:00+00:00</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
