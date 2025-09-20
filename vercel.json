@@ -15,6 +15,28 @@
       "source": "/(.*)",
       "has": [
         {
+          "type": "host",
+          "value": "koreandreamai.com"
+        }
+      ],
+      "destination": "https://dreamai.co.kr/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.koreandreamai.com"
+        }
+      ],
+      "destination": "https://dreamai.co.kr/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
           "type": "header",
           "key": "x-forwarded-proto",
           "value": "http"
