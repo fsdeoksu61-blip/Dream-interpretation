@@ -5,10 +5,10 @@
       "has": [
         {
           "type": "host",
-          "value": "www.koreandreanai.com"
+          "value": "www.koreandreamai.com"
         }
       ],
-      "destination": "https://koreandreanai.com/$1",
+      "destination": "https://koreandreamai.com/$1",
       "permanent": true
     },
     {
@@ -19,7 +19,7 @@
           "value": "dreamai.co.kr"
         }
       ],
-      "destination": "https://koreandreanai.com/$1",
+      "destination": "https://koreandreamai.com/$1",
       "permanent": true
     },
     {
@@ -30,7 +30,7 @@
           "value": "www.dreamai.co.kr"
         }
       ],
-      "destination": "https://koreandreanai.com/$1",
+      "destination": "https://koreandreamai.com/$1",
       "permanent": true
     },
     {
@@ -38,10 +38,10 @@
       "has": [
         {
           "type": "host",
-          "value": "koreandreamai.com"
+          "value": "koreandreanai.com"
         }
       ],
-      "destination": "https://koreandreanai.com/$1",
+      "destination": "https://koreandreamai.com/$1",
       "permanent": true
     },
     {
@@ -49,10 +49,10 @@
       "has": [
         {
           "type": "host",
-          "value": "www.koreandreamai.com"
+          "value": "www.koreandreanai.com"
         }
       ],
-      "destination": "https://koreandreanai.com/$1",
+      "destination": "https://koreandreamai.com/$1",
       "permanent": true
     }
   ],
