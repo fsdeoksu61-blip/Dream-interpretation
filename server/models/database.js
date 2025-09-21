@@ -861,38 +861,159 @@ class Database {
   }
 
   deleteInterpretation(id, callback) {
-    console.log('🔄 Deleting interpretation:', id);
+    console.log('🔄 Deleting interpretation and related data:', id);
 
     if (this.pool) {
-      // PostgreSQL
-      this.pool.query(
-        'DELETE FROM dream_interpretations WHERE id = $1',
-        [id],
-        (err, result) => {
-          if (err) {
-            console.error('❌ PostgreSQL deleteInterpretation error:', err);
-            callback(err);
-          } else {
-            console.log('✅ PostgreSQL deleteInterpretation success');
-            callback(null);
-          }
+      // PostgreSQL - delete related data first, then interpretation
+      this.pool.query('BEGIN', (err) => {
+        if (err) {
+          console.error('❌ PostgreSQL transaction begin error:', err);
+          return callback(err);
         }
-      );
+
+        // Delete related post_likes first
+        this.pool.query(
+          'DELETE FROM post_likes WHERE post_id IN (SELECT id FROM shared_posts WHERE interpretation_id = $1)',
+          [id],
+          (err, result) => {
+            if (err) {
+              console.error('❌ PostgreSQL delete post_likes error:', err);
+              return this.pool.query('ROLLBACK', () => callback(err));
+            }
+            console.log('✅ PostgreSQL deleted post_likes, rows affected:', result.rowCount);
+
+            // Delete related comments
+            this.pool.query(
+              'DELETE FROM comments WHERE post_id IN (SELECT id FROM shared_posts WHERE interpretation_id = $1)',
+              [id],
+              (err, result) => {
+                if (err) {
+                  console.error('❌ PostgreSQL delete comments error:', err);
+                  return this.pool.query('ROLLBACK', () => callback(err));
+                }
+                console.log('✅ PostgreSQL deleted comments, rows affected:', result.rowCount);
+
+                // Delete related shared_posts
+                this.pool.query(
+                  'DELETE FROM shared_posts WHERE interpretation_id = $1',
+                  [id],
+                  (err, result) => {
+                    if (err) {
+                      console.error('❌ PostgreSQL delete shared_posts error:', err);
+                      return this.pool.query('ROLLBACK', () => callback(err));
+                    }
+                    console.log('✅ PostgreSQL deleted shared_posts, rows affected:', result.rowCount);
+
+                    // Delete the interpretation
+                    this.pool.query(
+                      'DELETE FROM dream_interpretations WHERE id = $1',
+                      [id],
+                      (err, result) => {
+                        if (err) {
+                          console.error('❌ PostgreSQL deleteInterpretation error:', err);
+                          return this.pool.query('ROLLBACK', () => callback(err));
+                        }
+                        console.log('✅ PostgreSQL deleteInterpretation success, rows affected:', result.rowCount);
+
+                        this.pool.query('COMMIT', (err) => {
+                          if (err) {
+                            console.error('❌ PostgreSQL transaction commit error:', err);
+                            return callback(err);
+                          }
+                          callback(null);
+                        });
+                      }
+                    );
+                  }
+                );
+              }
+            );
+          }
+        );
+      });
     } else if (this.db) {
-      // SQLite
-      this.db.run(
-        'DELETE FROM dream_interpretations WHERE id = ?',
-        [id],
-        (err) => {
-          if (err) {
-            console.error('❌ SQLite deleteInterpretation error:', err);
-            callback(err);
-          } else {
-            console.log('✅ SQLite deleteInterpretation success');
-            callback(null);
+      // SQLite - delete related data first, then interpretation
+      this.db.serialize(() => {
+        this.db.run('BEGIN TRANSACTION');
+
+        // Delete related post_likes first (if post_likes table exists)
+        this.db.run(
+          'DELETE FROM post_likes WHERE post_id IN (SELECT id FROM shared_posts WHERE interpretation_id = ?)',
+          [id],
+          function(err) {
+            if (err && !err.message.includes('no such table')) {
+              console.error('❌ SQLite delete post_likes error:', err);
+              this.db.run('ROLLBACK');
+              return callback(err);
+            }
+            console.log('✅ SQLite deleted post_likes, rows affected:', this.changes);
           }
-        }
-      );
+        );
+
+        // Delete related comments
+        this.db.run(
+          'DELETE FROM comments WHERE post_id IN (SELECT id FROM shared_posts WHERE interpretation_id = ?)',
+          [id],
+          function(err) {
+            if (err) {
+              console.error('❌ SQLite delete comments error:', err);
+              this.db.run('ROLLBACK');
+              return callback(err);
+            }
+            console.log('✅ SQLite deleted comments, rows affected:', this.changes);
+          }
+        );
+
+        // Delete related posts first (legacy posts table)
+        this.db.run(
+          'DELETE FROM posts WHERE interpretation_id = ?',
+          [id],
+          function(err) {
+            if (err && !err.message.includes('no such table')) {
+              console.error('❌ SQLite delete posts error:', err);
+              this.db.run('ROLLBACK');
+              return callback(err);
+            }
+            console.log('✅ SQLite deleted posts, rows affected:', this.changes);
+          }
+        );
+
+        // Delete related shared_posts
+        this.db.run(
+          'DELETE FROM shared_posts WHERE interpretation_id = ?',
+          [id],
+          function(err) {
+            if (err && !err.message.includes('no such table')) {
+              console.error('❌ SQLite delete shared_posts error:', err);
+              this.db.run('ROLLBACK');
+              return callback(err);
+            }
+            console.log('✅ SQLite deleted shared_posts, rows affected:', this.changes);
+          }
+        );
+
+        // Delete the interpretation
+        this.db.run(
+          'DELETE FROM dream_interpretations WHERE id = ?',
+          [id],
+          function(err) {
+            if (err) {
+              console.error('❌ SQLite deleteInterpretation error:', err);
+              this.db.run('ROLLBACK');
+              callback(err);
+            } else {
+              console.log('✅ SQLite deleteInterpretation success, rows affected:', this.changes);
+              this.db.run('COMMIT', function(err) {
+                if (err) {
+                  console.error('❌ SQLite transaction commit error:', err);
+                  return callback(err);
+                }
+                callback(null);
+              });
+            }
+          }
+        );
+      });
     } else {
       console.error('❌ No database connection for deleteInterpretation');
       callback(new Error('데이터베이스 연결이 없습니다.'));
