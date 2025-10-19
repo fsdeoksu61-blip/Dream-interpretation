@@ -62,6 +62,7 @@ class OpenAIService {
         ],
         max_tokens: 1500,
         temperature: 0.8,
+        timeout: 90000, // 90초 타임아웃 설정
       });
 
       console.log('✅ OpenAI API 응답 성공');
@@ -71,17 +72,22 @@ class OpenAIService {
         message: error.message,
         status: error.status,
         code: error.code,
-        type: error.type
+        type: error.type,
+        timestamp: new Date().toISOString()
       });
-      
+
       if (error.status === 401) {
         throw new Error('OpenAI API 키가 유효하지 않습니다.');
       } else if (error.status === 429) {
         throw new Error('API 사용 한도를 초과했습니다. 잠시 후 다시 시도해주세요.');
-      } else if (error.status === 500) {
-        throw new Error('OpenAI 서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      } else if (error.status === 500 || error.status === 503) {
+        throw new Error('OpenAI 서버에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      } else if (error.code === 'ETIMEDOUT' || error.code === 'ECONNABORTED') {
+        throw new Error('요청 시간이 초과되었습니다. 네트워크 상태를 확인하고 다시 시도해주세요.');
+      } else if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
+        throw new Error('OpenAI 서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.');
       } else {
-        throw new Error('꿈 해석 중 오류가 발생했습니다. 다시 시도해주세요.');
+        throw new Error(`꿈 해석 중 오류가 발생했습니다. ${error.message || '다시 시도해주세요.'}`);
       }
     }
   }

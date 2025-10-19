@@ -5,7 +5,7 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://dream-interpretat
 // Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 60000, // 60초로 증가 (OpenAI API 응답 시간 고려)
+  timeout: 120000, // 120초로 증가 (OpenAI API 응답 시간 고려, 네트워크 지연 대응)
 });
 
 // Request interceptor to add session ID
@@ -42,6 +42,16 @@ api.interceptors.response.use(
       localStorage.removeItem('token');
       window.location.href = '/login';
     }
+
+    // Enhanced error handling for better user experience
+    if (error.code === 'ECONNABORTED') {
+      error.message = '서버 응답 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.';
+    } else if (error.code === 'ERR_NETWORK') {
+      error.message = '네트워크 연결을 확인해주세요.';
+    } else if (!error.response) {
+      error.message = '서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.';
+    }
+
     return Promise.reject(error);
   }
 );

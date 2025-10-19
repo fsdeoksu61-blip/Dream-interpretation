@@ -41,7 +41,29 @@ const DreamInput = () => {
       }
     } catch (error) {
       console.error('Dream interpretation error:', error);
-      setError('꿈 해석 중 오류가 발생했습니다. 다시 시도해주세요.');
+
+      // Enhanced error messages based on error type
+      let errorMessage = '꿈 해석 중 오류가 발생했습니다.';
+
+      if (error.code === 'ECONNABORTED') {
+        errorMessage = '서버 응답 시간이 초과되었습니다. 네트워크가 불안정할 수 있습니다. 잠시 후 다시 시도해주세요.';
+      } else if (error.code === 'ERR_NETWORK') {
+        errorMessage = '네트워크 연결을 확인해주세요. 인터넷 연결이 불안정할 수 있습니다.';
+      } else if (error.response) {
+        // Server responded with error
+        const serverError = error.response.data?.error;
+        if (serverError) {
+          errorMessage = serverError;
+        } else if (error.response.status === 500) {
+          errorMessage = '서버에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해주세요.';
+        } else if (error.response.status === 429) {
+          errorMessage = 'API 사용 한도를 초과했습니다. 잠시 후 다시 시도해주세요.';
+        }
+      } else if (!error.response) {
+        errorMessage = '서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.';
+      }
+
+      setError(errorMessage);
       setLoading(false);
     }
   };
