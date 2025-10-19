@@ -63,7 +63,7 @@ class Database {
         CREATE TABLE IF NOT EXISTS dream_interpretations (
           id SERIAL PRIMARY KEY,
           user_id INTEGER REFERENCES users(id),
-          session_id VARCHAR(255) REFERENCES sessions(id),
+          session_id VARCHAR(255),
           dream_content TEXT NOT NULL,
           interpretation TEXT NOT NULL,
           is_shared BOOLEAN DEFAULT FALSE,

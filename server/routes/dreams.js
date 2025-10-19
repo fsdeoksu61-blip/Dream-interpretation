@@ -21,10 +21,10 @@ router.post('/interpret', authenticateOptional, getSessionId, async (req, res) =
     // Get interpretation from OpenAI
     const interpretation = await openaiService.interpretDream(dreamContent);
 
-    // Save to database
+    // Save to database - use null for session_id if there's an issue
     const data = {
       user_id: req.user ? req.user.id : null,
-      session_id: req.user ? null : req.sessionId,
+      session_id: req.user ? null : (req.sessionId || null),
       dream_content: dreamContent,
       interpretation: interpretation,
       is_shared: false
@@ -32,7 +32,14 @@ router.post('/interpret', authenticateOptional, getSessionId, async (req, res) =
 
     db.createInterpretation(data, (err, interpretationId) => {
       if (err) {
-        console.error('Database error:', err);
+        console.error('Database error details:', {
+          error: err,
+          message: err.message,
+          code: err.code,
+          detail: err.detail,
+          sessionId: req.sessionId,
+          userId: req.user?.id
+        });
         return res.status(500).json({ error: '해석 저장 중 오류가 발생했습니다.' });
       }
 
