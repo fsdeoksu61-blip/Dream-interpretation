@@ -46,22 +46,26 @@ const requireAdmin = (req, res, next) => {
 
 const getSessionId = (req, res, next) => {
   let sessionId = req.headers['x-session-id'];
-  
+
   if (!sessionId) {
     const { v4: uuidv4 } = require('uuid');
     sessionId = uuidv4();
     res.setHeader('X-Session-ID', sessionId);
-    
-    // Create session in database
+
+    req.sessionId = sessionId;
+
+    // Create session in database before proceeding
     db.createSession(sessionId, (err) => {
       if (err) {
         console.error('Error creating session:', err);
+        // Continue anyway to avoid blocking user
       }
+      next();
     });
+  } else {
+    req.sessionId = sessionId;
+    next();
   }
-  
-  req.sessionId = sessionId;
-  next();
 };
 
 module.exports = {
