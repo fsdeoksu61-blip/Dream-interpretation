@@ -62,7 +62,6 @@ class OpenAIService {
         ],
         max_tokens: 1500,
         temperature: 0.8,
-        timeout: 90000, // 90초 타임아웃 설정
       });
 
       console.log('✅ OpenAI API 응답 성공');
