@@ -21,10 +21,10 @@ router.post('/interpret', authenticateOptional, getSessionId, async (req, res) =
     // Get interpretation from OpenAI
     const interpretation = await openaiService.interpretDream(dreamContent);
 
-    // Save to database - use null for session_id if there's an issue
+    // Save to database - use null for session_id to avoid foreign key constraint issues
     const data = {
       user_id: req.user ? req.user.id : null,
-      session_id: req.user ? null : (req.sessionId || null),
+      session_id: null, // Always use null to avoid FK constraint issues
       dream_content: dreamContent,
       interpretation: interpretation,
       is_shared: false
@@ -37,6 +37,7 @@ router.post('/interpret', authenticateOptional, getSessionId, async (req, res) =
           message: err.message,
           code: err.code,
           detail: err.detail,
+          constraint: err.constraint,
           sessionId: req.sessionId,
           userId: req.user?.id
         });
